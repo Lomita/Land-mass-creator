@@ -1,19 +1,14 @@
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.AI;
 using SF = UnityEngine.SerializeField;
 
 public class WorldGenerator : MonoBehaviour
 {
-    [SF] private NavMeshSurface Surface;
-
     [Header("Prefabs Settings")]
     [SF] private GameObject CubePrefab;
     [SF] private GameObject[] TreePrefabs;
     [SF] private GameObject[] BushPrefabs;
     [SF] private GameObject[] ObjectPrefabs;
-    [SF] private GameObject[] NPCPrefabs;
-    [SF] private GameObject PlayerPrefab;
 
     [Header("World Settings")]
     [SF] private int WorldLength;
@@ -21,7 +16,6 @@ public class WorldGenerator : MonoBehaviour
     [SF] private int TreeCount;
     [SF] private int BushCount;
     [SF] private int ObjectCount;
-    [SF] private int NPCCount;
     [SF] private bool UseCubes = true;
 
     [Header("Noise Settings")]
@@ -46,8 +40,6 @@ public class WorldGenerator : MonoBehaviour
     Color[] Colors;                                             //world colors
     int[] Triangles;                                            //mesh triangles
     NoiseMapOutput NoiseMapOut;
-    List<GameObject> NPCs;
-    GameObject Player;
 
     private void Awake()
     {
@@ -73,27 +65,7 @@ public class WorldGenerator : MonoBehaviour
         if (!Application.isPlaying)
             Debug.Log("World not getting filled if in editor mode =) !!!!");
         else
-        {
-            FillWorld();
-
-            if (Surface) Surface.BuildNavMesh();
-
-            Vector3 PlayerPos = NoiseMapOut.ForestValues[Random.Range(0, NoiseMapOut.ForestValues.Length)];
-            PlayerPos.y += 1.1f;
-            Player = Instantiate(PlayerPrefab, PlayerPos, Quaternion.identity);
-            NPCs = InstantiateObjects(NPCCount, NPCPrefabs, NoiseMapOut.OceanValues, Vector3.one);
-
-            if (Player)
-            {
-                foreach (GameObject npc in NPCs)
-                {
-                    NPC n = npc.GetComponent<NPC>();
-                    if (n) n.Player = Player.transform;
-                }
-            }
-            else
-                Debug.LogError("Player is null!!");
-        }     
+            FillWorld(); 
     }
 
     private void CubeWorld()
