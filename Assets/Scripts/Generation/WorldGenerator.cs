@@ -23,7 +23,7 @@ public class WorldGenerator : MonoBehaviour
     [SF] private float NoiseScale;
     [SF] private Vector2 ScaleOffset;
     [SF] private int Octaves;
-    [SF] private float Persistance;
+    [SF] [Range(1.0f, 4.0f)] private float Persistance;
     [SF] private float Density;
     [SF] private float OceanLevel;
     [SF] private float CapMountainHeight;
