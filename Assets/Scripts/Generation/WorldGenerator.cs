@@ -2,220 +2,224 @@ using System.Collections.Generic;
 using UnityEngine;
 using SF = UnityEngine.SerializeField;
 
-public class WorldGenerator : MonoBehaviour
+namespace LandMassCreator
 {
-    [Header("Prefabs Settings")]
-    [SF] private GameObject CubePrefab;
-    [SF] private GameObject[] TreePrefabs;
-    [SF] private GameObject[] BushPrefabs;
-    [SF] private GameObject[] ObjectPrefabs;
-
-    [Header("World Settings")]
-    [SF] private int WorldLength;
-    [SF] private int WorldWide;
-    [SF] private int TreeCount;
-    [SF] private int BushCount;
-    [SF] private int ObjectCount;
-    [SF] private bool UseCubes = true;
-
-    [Header("Noise Settings")]
-    [SF] private int Seed;
-    [SF] private float NoiseScale;
-    [SF] private Vector2 ScaleOffset;
-    [SF] private int Octaves;
-    [SF] private float Persistance;
-    [SF] private float Density;
-    [SF] private float OceanLevel;
-    [SF] private float CapMountainHeight;
-
-    [Header("Color Settings")]
-    [SF] private Gradient Gradiant;
-
-    [Header("Generation")]
-    [SF] public bool AutoUpdate = true;
-    [SF] public bool DrawGizmosVertices = false;
-
-    Mesh World;                                                 //World mesh
-    Vector3[] Vertices;                                         //mesh vertices
-    Color[] Colors;                                             //world colors
-    int[] Triangles;                                            //mesh triangles
-    NoiseMapOutput NoiseMapOut;
-
-    private void Awake()
+    public class WorldGenerator : MonoBehaviour
     {
-        GenerateWorld();
-    }
+        [Header("Prefabs Settings")]
+        [SF] private GameObject CubePrefab;
+        [SF] private GameObject[] TreePrefabs;
+        [SF] private GameObject[] BushPrefabs;
+        [SF] private GameObject[] ObjectPrefabs;
 
-    //Generate worlds triangles and vertices
-    public void GenerateWorld()
-    {
-        NoiseSettings NoiseSettings = new NoiseSettings(WorldWide, WorldLength,
-           Seed, NoiseScale, ScaleOffset, Octaves, Persistance, Density, OceanLevel, CapMountainHeight);
+        [Header("World Settings")]
+        [SF] private int WorldLength;
+        [SF] private int WorldWide;
+        [SF] private int TreeCount;
+        [SF] private int BushCount;
+        [SF] private int ObjectCount;
+        [SF] private bool UseCubes = true;
 
-        NoiseMapOut = Noise.GenerateNoiseMap(NoiseSettings);
+        [Header("Noise Settings")]
+        [SF] private int Seed;
+        [SF] private float NoiseScale;
+        [SF] private Vector2 ScaleOffset;
+        [SF] private int Octaves;
+        [SF] private float Persistance;
+        [SF] private float Density;
+        [SF] private float OceanLevel;
+        [SF] private float CapMountainHeight;
 
-        if (UseCubes)
+        [Header("Color Settings")]
+        [SF] private Gradient Gradiant;
+
+        [Header("Generation")]
+        [SF] public bool AutoUpdate = true;
+        [SF] public bool DrawGizmosVertices = false;
+
+        Mesh World;                                                 //World mesh
+        Vector3[] Vertices;                                         //mesh vertices
+        Color[] Colors;                                             //world colors
+        int[] Triangles;                                            //mesh triangles
+        HeightMap NoiseMapOut;
+
+        private void Awake()
         {
-            if (World) World.Clear();
-            CubeWorld();
-        } 
-        else
-            TriangleWorld();
-
-        if (!Application.isPlaying)
-            Debug.Log("World not getting filled if in editor mode =) !!!!");
-        else
-            FillWorld(); 
-    }
-
-    private void CubeWorld()
-    {
-        if (!Application.isPlaying)
-        {
-            Debug.LogError("Dont use Cubes in editor mode =)!!!");
-            return;
+            GenerateWorld();
         }
 
-        Vertices = new Vector3[(WorldLength + 1) * (WorldWide + 1)];
-        Colors = new Color[(WorldLength + 1) * (WorldWide + 1)];
-
-        for (int idx = 0, x = 0; x < WorldWide; x++)
+        //Generate worlds triangles and vertices
+        public void GenerateWorld()
         {
-            for (int y = 0; y < WorldLength; y++)
+            HeightMapSettings heightMapSettings = new HeightMapSettings(WorldWide, WorldLength,
+               Seed, NoiseScale, ScaleOffset.x, ScaleOffset.y, Octaves, Persistance, Density, OceanLevel, CapMountainHeight);
+
+            NoiseMapOut = Noise.GenerateHeightMap(heightMapSettings);
+
+            if (UseCubes)
             {
-                Vertices[idx] = new Vector3(x, NoiseMapOut.NoiseMap[x, y], y);
-                Colors[idx] = Gradiant.Evaluate(NoiseMapOut.NoiseMapNormalized[x, y]);
-
-                GameObject cube = Instantiate(CubePrefab, Vertices[idx], Quaternion.identity, transform);
-                MeshFilter mf = cube.GetComponent<MeshFilter>();
-                Mesh m = mf.mesh;
-
-                Color[] c = new Color[m.vertexCount];
-
-                for (int v = 0; v < m.vertexCount - 1; v++)
-                    c[v] = Colors[idx];
-
-                m.SetColors(c);
-
-                idx++;
+                if (World) World.Clear();
+                CubeWorld();
             }
+            else
+                TriangleWorld();
+
+            if (!Application.isPlaying)
+                Debug.Log("World not getting filled if in editor mode =) !!!!");
+            /*else
+                FillWorld();*/
         }
-    }
 
-    private void TriangleWorld()
-    {
-        World = new Mesh();
-        MeshFilter m = GetComponent<MeshFilter>();
-        m.mesh = World;
-
-        Vertices = new Vector3[(WorldLength + 1) * (WorldWide + 1)];
-        Colors = new Color[(WorldLength + 1) * (WorldWide + 1)];
-
-        for (int idx = 0, x = 0; x < WorldWide; x++)
+        private void CubeWorld()
         {
-            for (int y = 0; y < WorldLength; y++)
+            if (!Application.isPlaying)
             {
-                Vertices[idx] = new Vector3(x, NoiseMapOut.NoiseMap[x, y], y);
-                Colors[idx] = Gradiant.Evaluate(NoiseMapOut.NoiseMapNormalized[x, y]);
-                idx++;
+                Debug.LogError("Dont use Cubes in editor mode =)!!!");
+                return;
+            }
+
+            Vertices = new Vector3[(WorldLength + 1) * (WorldWide + 1)];
+            Colors = new Color[(WorldLength + 1) * (WorldWide + 1)];
+
+            for (int idx = 0, x = 0; x < WorldWide; x++)
+            {
+                for (int y = 0; y < WorldLength; y++)
+                {
+                    Vertices[idx] = new Vector3(x, NoiseMapOut.HeightMapReal[x, y], y);
+                    Colors[idx] = Gradiant.Evaluate(NoiseMapOut.HeightMapNormalized[x, y]);
+
+                    GameObject cube = Instantiate(CubePrefab, Vertices[idx], Quaternion.identity, transform);
+                    MeshFilter mf = cube.GetComponent<MeshFilter>();
+                    Mesh m = mf.mesh;
+
+                    Color[] c = new Color[m.vertexCount];
+
+                    for (int v = 0; v < m.vertexCount - 1; v++)
+                        c[v] = Colors[idx];
+
+                    m.SetColors(c);
+
+                    idx++;
+                }
             }
         }
 
-        int Size = WorldWide * WorldLength * 6;
-        Triangles = new int[Size];
-
-        int t = 0, v = 0;
-        for (int x = 0; x < WorldWide - 1; x++)
+        private void TriangleWorld()
         {
-            for (int y = 0; y < WorldLength - 1; y++)
+            World = new Mesh();
+            MeshFilter m = GetComponent<MeshFilter>();
+            m.mesh = World;
+
+            Vertices = new Vector3[(WorldLength + 1) * (WorldWide + 1)];
+            Colors = new Color[(WorldLength + 1) * (WorldWide + 1)];
+
+            for (int idx = 0, x = 0; x < WorldWide; x++)
             {
-                Triangles[t + 0] = v + 0;
-                Triangles[t + 1] = v + 1;
-                Triangles[t + 2] = v + WorldLength + 1;
-                Triangles[t + 3] = v + 0;
-                Triangles[t + 4] = v + WorldLength + 1;
-                Triangles[t + 5] = v + WorldLength;
+                for (int y = 0; y < WorldLength; y++)
+                {
+                    Vertices[idx] = new Vector3(x, NoiseMapOut.HeightMapReal[x, y], y);
+                    Colors[idx] = Gradiant.Evaluate(NoiseMapOut.HeightMapNormalized[x, y]);
+                    idx++;
+                }
+            }
+
+            int Size = WorldWide * WorldLength * 6;
+            Triangles = new int[Size];
+
+            int t = 0, v = 0;
+            for (int x = 0; x < WorldWide - 1; x++)
+            {
+                for (int y = 0; y < WorldLength - 1; y++)
+                {
+                    Triangles[t + 0] = v + 0;
+                    Triangles[t + 1] = v + 1;
+                    Triangles[t + 2] = v + WorldLength + 1;
+                    Triangles[t + 3] = v + 0;
+                    Triangles[t + 4] = v + WorldLength + 1;
+                    Triangles[t + 5] = v + WorldLength;
+
+                    v++;
+                    t += 6;
+                }
 
                 v++;
-                t += 6;
             }
 
-            v++;
+            UpdateMesh();
         }
 
-        UpdateMesh();
-    }
-
-    private void FillWorld()
-    {
-        //Spawn Trees
-        InstantiateObjects(TreeCount, TreePrefabs, NoiseMapOut.ForestValues, Vector3.one);
-
-        //Spawn Bushes
-        //only 1/8 of the bushes should spawn on mountain terrain
-        int newBushCount = BushCount - (BushCount % 8);
-        int mountainBushCount = newBushCount / 8;
-        int forestBushCount = newBushCount - mountainBushCount;
-
-        InstantiateObjects(forestBushCount, BushPrefabs, NoiseMapOut.ForestValues, Vector3.one);
-        InstantiateObjects(mountainBushCount, BushPrefabs, NoiseMapOut.MountainValues, Vector3.one);
-
-        //Spawn Objects
-        //only 1/8 of the objects should spawn on mountain terrain
-        int newObjectCount = ObjectCount - (ObjectCount % 8);
-        int mountainObjectCount = newObjectCount / 8;
-        int forestObjectCount = newObjectCount - mountainObjectCount;
-        Vector3 size = new Vector3(0.5f, 0.5f, 0.5f);
-
-        InstantiateObjects(forestObjectCount, ObjectPrefabs, NoiseMapOut.ForestValues, size);
-        InstantiateObjects(mountainObjectCount, ObjectPrefabs, NoiseMapOut.MountainValues, size);
-    }
-
-    private List<GameObject> InstantiateObjects(int count, GameObject[] prefabs, Vector3[] possiblePositions, Vector3 size)
-    {
-        List<GameObject> objs = new List<GameObject>();
-
-        if (prefabs.Length == 0 || possiblePositions.Length == 0)
-            return objs;
-
-        for (int idx = 0; idx < count; idx++)
+        /*
+        private void FillWorld()
         {
-            GameObject bushPrefab = prefabs[Random.Range(0, prefabs.Length)];
-            Vector3 position = possiblePositions[Random.Range(0, possiblePositions.Length)];
-            GameObject obj = Instantiate(bushPrefab, position, Quaternion.identity, transform);
-            obj.transform.localScale = size;
-            objs.Add(obj);
+            //Spawn Trees
+            InstantiateObjects(TreeCount, TreePrefabs, NoiseMapOut.ForestValues, Vector3.one);
+
+            //Spawn Bushes
+            //only 1/8 of the bushes should spawn on mountain terrain
+            int newBushCount = BushCount - (BushCount % 8);
+            int mountainBushCount = newBushCount / 8;
+            int forestBushCount = newBushCount - mountainBushCount;
+
+            InstantiateObjects(forestBushCount, BushPrefabs, NoiseMapOut.ForestValues, Vector3.one);
+            InstantiateObjects(mountainBushCount, BushPrefabs, NoiseMapOut.MountainValues, Vector3.one);
+
+            //Spawn Objects
+            //only 1/8 of the objects should spawn on mountain terrain
+            int newObjectCount = ObjectCount - (ObjectCount % 8);
+            int mountainObjectCount = newObjectCount / 8;
+            int forestObjectCount = newObjectCount - mountainObjectCount;
+            Vector3 size = new Vector3(0.5f, 0.5f, 0.5f);
+
+            InstantiateObjects(forestObjectCount, ObjectPrefabs, NoiseMapOut.ForestValues, size);
+            InstantiateObjects(mountainObjectCount, ObjectPrefabs, NoiseMapOut.MountainValues, size);
+        }*/
+
+        private List<GameObject> InstantiateObjects(int count, GameObject[] prefabs, Vector3[] possiblePositions, Vector3 size)
+        {
+            List<GameObject> objs = new List<GameObject>();
+
+            if (prefabs.Length == 0 || possiblePositions.Length == 0)
+                return objs;
+
+            for (int idx = 0; idx < count; idx++)
+            {
+                GameObject bushPrefab = prefabs[Random.Range(0, prefabs.Length)];
+                Vector3 position = possiblePositions[Random.Range(0, possiblePositions.Length)];
+                GameObject obj = Instantiate(bushPrefab, position, Quaternion.identity, transform);
+                obj.transform.localScale = size;
+                objs.Add(obj);
+            }
+
+            return objs;
         }
 
-        return objs;
-    }
+        //update triangles and vertices of world mesh
+        private void UpdateMesh()
+        {
+            if (!World) return;
 
-    //update triangles and vertices of world mesh
-    private void UpdateMesh()
-    {
-        if (!World) return;
+            World.Clear();
 
-        World.Clear();
+            World.vertices = Vertices;
+            World.triangles = Triangles;
+            World.colors = Colors;
 
-        World.vertices = Vertices;
-        World.triangles = Triangles;
-        World.colors = Colors;
+            World.RecalculateNormals();
+        }
 
-        World.RecalculateNormals();
-    }
+        //draw grid debug
+        private void OnDrawGizmos()
+        {
+            if (!DrawGizmosVertices || Vertices == null) return;
 
-    //draw grid debug
-    private void OnDrawGizmos()
-    {
-        if (!DrawGizmosVertices || Vertices == null) return;
+            for (int idx = 0; idx < Vertices.Length; idx++)
+                Gizmos.DrawCube(Vertices[idx], new Vector3(0.1f, 0.1f, 0.1f));
+        }
 
-        for (int idx = 0; idx < Vertices.Length; idx++)
-            Gizmos.DrawCube(Vertices[idx], new Vector3(0.1f, 0.1f, 0.1f));
-    }
-
-    private void OnValidate()
-    {
-        if (WorldLength < 1) WorldLength = 1;
-        if (WorldWide < 1) WorldWide = 1;
+        private void OnValidate()
+        {
+            if (WorldLength < 1) WorldLength = 1;
+            if (WorldWide < 1) WorldWide = 1;
+        }
     }
 }

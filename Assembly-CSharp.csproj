@@ -56,8 +56,11 @@
     <Analyzer Include="V:\Microsoft Visual Studio\2019\Community\Common7\IDE\Extensions\Microsoft\Visual Studio Tools for Unity\Analyzers\Microsoft.Unity.Analyzers.dll" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Assets\Scripts\Generation\Noise.cs" />
+    <Compile Include="Assets\Tools\LandMassCreator\Scripts\Noise.cs" />
     <Compile Include="Assets\Scripts\Generation\WorldGenerator.cs" />
+    <Compile Include="Assets\Tools\LandMassCreator\Scripts\HeightMapSettings.cs" />
+    <Compile Include="Assets\Tools\LandMassCreator\Scripts\HeightMap.cs" />
+    <Compile Include="Assets\Tools\LandMassCreator\Scripts\ExtensionMethods.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Assets\Shader\VertexColor.shader" />
