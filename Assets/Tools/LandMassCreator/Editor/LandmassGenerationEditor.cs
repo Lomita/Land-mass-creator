@@ -52,6 +52,8 @@ namespace LandMassCreator
             m_treePrefabsProperty = m_serializedLgm.FindProperty("m_treePrefabs");
             m_plantPrefabsProperty = m_serializedLgm.FindProperty("m_plantPrefabs");
             m_otherPrefabsProperty = m_serializedLgm.FindProperty("m_otherPrefabs");
+
+            m_lmg.GenerateTerrain();
         }
 
         /// <summary>
@@ -60,8 +62,7 @@ namespace LandMassCreator
         public override void OnInspectorGUI()
         {
             DrawGUI();
-
-            if(m_lmg.AutoUpdate)
+            if (m_lmg.AutoUpdate)
                 m_lmg.GenerateTerrain();
         }
 
@@ -70,6 +71,9 @@ namespace LandMassCreator
         /// </summary>
         private void DrawGUI()
         {
+            if (m_lmg.Settings == null)
+                return;
+
             //Draw terrain settings GUI
             EditorGUILayout.LabelField("Terrain Settings", m_skin.label);
             EditorGUILayout.BeginVertical("box");           

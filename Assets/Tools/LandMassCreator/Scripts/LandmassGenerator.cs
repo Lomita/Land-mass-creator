@@ -8,17 +8,17 @@ namespace LandMassCreator
         /// <summary>
         /// Height map settings
         /// </summary>
-        private HeightMapSettings m_settings;
+        private HeightMapSettings m_settings = new HeightMapSettings();
         
         /// <summary>
         /// Generated height map
         /// </summary>
-        private HeightMap m_map;
+        private HeightMap m_map = null;
 
         /// <summary>
         /// gradiant for height colors
         /// </summary>
-        private Gradient m_colorPalette;
+        private Gradient m_colorPalette = new Gradient();
 
         /// <summary>
         /// Auto updates all values if checked
@@ -84,14 +84,6 @@ namespace LandMassCreator
         /// Gets and Sets other prefabs
         /// </summary>
         public GameObject[] OtherPrefabs { get => m_otherPrefabs; set => m_otherPrefabs = value; }
-
-        /// <summary>
-        /// Awake is called when the script instance is beeing loaded
-        /// </summary>
-        private void Awake()
-        {
-            Settings = new HeightMapSettings();
-        }
 
         /// <summary>
         /// Generates the terrain

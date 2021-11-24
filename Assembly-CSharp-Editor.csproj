@@ -57,6 +57,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Assets\Tools\LandMassCreator\Editor\LandmassGenerationEditor.cs" />
+    <Compile Include="Assets\Tools\LandMassCreator\Editor\MenuItems.cs" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="UnityEngine">
