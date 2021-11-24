@@ -56,7 +56,7 @@ namespace LandMassCreator
 		/// <summary>
 		/// Cap minimal values
 		/// </summary>
-		private float m_oceanLevel = -5.0f;
+		private float m_oceanLevel = 0.0f;
 		
 		/// <summary>
 		/// Cap maximal values

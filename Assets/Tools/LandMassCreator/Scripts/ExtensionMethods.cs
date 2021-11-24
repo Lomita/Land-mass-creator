@@ -5,7 +5,7 @@ namespace LandMassCreator
     /// <summary>
     /// Holds ExtensionsMethods
     /// </summary>
-    static class ExtensionMethods
+    public static class ExtensionMethods
     {
         /// <summary>
         /// Clamp function example use: clampedVal = val.Clamp(min, max);
