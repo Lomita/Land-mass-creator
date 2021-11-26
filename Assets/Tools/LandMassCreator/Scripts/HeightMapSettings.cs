@@ -11,7 +11,7 @@ namespace LandMassCreator
 		/// <summary>
 		/// The map width 
 		/// </summary>
-		private int m_mapWidth = 200;
+		public int m_mapWidth = 200;
 		
 		/// <summary>
 		/// The map Height

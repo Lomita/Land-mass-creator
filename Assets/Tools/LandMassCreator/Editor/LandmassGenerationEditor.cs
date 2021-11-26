@@ -135,22 +135,44 @@ namespace LandMassCreator
                 switch (portState.Status)
                 {
                     case Status.SUCCESS:
+                        Debug.Log("Export SUCCESS");
                         break;
 
                     case Status.CANCEL:
+                        Debug.Log("Export CANCEL");
                         break;
 
                     case Status.FAILED:
+                        Debug.Log("Export FAILED");
                         break;
 
                     case Status.UNKNOWN:
+                        Debug.Log("Export UNKNOWN");
                         break;
                 }
             }
 
             if (GUILayout.Button("Import"))
             {
-                EditorUtils.ImportTerrainSettings(m_lmg);
+                PortState portState = EditorUtils.ImportTerrainSettings(m_lmg);
+                switch (portState.Status)
+                {
+                    case Status.SUCCESS:
+                        Debug.Log("Import SUCCESS");
+                        break;
+
+                    case Status.CANCEL:
+                        Debug.Log("Import CANCEL");
+                        break;
+
+                    case Status.FAILED:
+                        Debug.Log("Import FAILED");
+                        break;
+
+                    case Status.UNKNOWN:
+                        Debug.Log("Import UNKNOWN");
+                        break;
+                }
             }
 
             EditorGUILayout.EndHorizontal();

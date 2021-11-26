@@ -22,17 +22,47 @@ namespace LandMassCreator
     /// </summary>
     public struct PortState
     {
-        public PortState(Status status, string msg = "") : this()
+        /// <summary>
+        /// Represents the export or import port state
+        /// </summary>
+        /// <param name="status">Import or export status</param>
+        /// <param name="msg">Import or export status message</param>
+        public PortState(Status status, string msg = "", string path = "") : this()
         {
-            Status = status;
-            Msg = msg;
+            m_status = status;
+            m_msg = msg;
+            m_path = path;
         }
 
+        /// <summary>
+        /// Import or export status
+        /// </summary>
         private Status m_status;
+
+        /// <summary>
+        /// Import or export status message
+        /// </summary>
         private string m_msg;
 
+        /// <summary>
+        /// export or import path
+        /// </summary>
+        private string m_path;
+
+        /// <summary>
+        /// Gets and sets import or export status
+        /// </summary>
         public Status Status { get => m_status; set => m_status = value; }
+
+        /// <summary>
+        /// Gets and sets import or export message
+        /// </summary>
         public string Msg { get => m_msg; set => m_msg = value; }
+        
+        /// <summary>
+        /// Gets or sets import or export path
+        /// </summary>
+        public string Path { get => m_path; set => m_path = value; }
     }
 
     /// <summary>
@@ -48,7 +78,7 @@ namespace LandMassCreator
         /// <summary>
         /// Standard import and export path
         /// </summary>
-        private static readonly string m_standardPortPath = Application.persistentDataPath + "/terrain.lmg";
+        private static readonly string m_standardPortPath = Application.persistentDataPath;
 
         /// <summary>
         /// Export terrain settings
@@ -57,18 +87,18 @@ namespace LandMassCreator
         /// <returns>Return the export state<</returns>
         public static PortState ExportTerrainSettings(LandmassGenerator lmg)
         {
-            string[] exportDirectory = StandaloneFileBrowser.OpenFolderPanel("Select export directory", m_standardPortPath, false);
-            if (exportDirectory.Equals(null) || exportDirectory.Length.Equals(0) || string.IsNullOrEmpty(exportDirectory[0]))
+            string exportFilePath = StandaloneFileBrowser.SaveFilePanel("Select export directory", m_standardPortPath, "terrain", "lmg");
+            if (string.IsNullOrEmpty(exportFilePath))
                 return new PortState(Status.CANCEL);
             
-            FileStream fileStream = new FileStream(exportDirectory[0], FileMode.Create);
+            FileStream fileStream = new FileStream(exportFilePath, FileMode.Create);
             bool success = WriteToFileStream(JsonUtility.ToJson(lmg.Settings, true), fileStream);
             fileStream.Close();
 
             if (!success) 
                 return new PortState(Status.FAILED, "The writing of the file failed!");
 
-            return new PortState(Status.SUCCESS);
+            return new PortState(Status.SUCCESS, "", exportFilePath);
         }
 
         /// <summary>
@@ -77,13 +107,12 @@ namespace LandMassCreator
         /// <returns>Return the import state</returns>
         public static PortState ImportTerrainSettings(LandmassGenerator lmg)
         {
-            string importFile = StandaloneFileBrowser.SaveFilePanel("Select terrain settings for import", m_standardPortPath, "Terrain", "lmg");
-            
-            if (string.IsNullOrEmpty(importFile))
+            string[] importFile = StandaloneFileBrowser.OpenFilePanel("Select terrain settings for import", m_standardPortPath, "lmg", false);
+            if (importFile.Equals(null) || importFile.Length.Equals(0) || string.IsNullOrEmpty(importFile[0]))
                 return new PortState(Status.CANCEL);
 
             string json = "";
-            FileStream fileStream = new FileStream(importFile, FileMode.Open);
+            FileStream fileStream = new FileStream(importFile[0], FileMode.Open);
             bool success = ReadFileStream(fileStream, out json);          
             fileStream.Close();
 
@@ -94,7 +123,7 @@ namespace LandMassCreator
             JsonUtility.FromJsonOverwrite(json, heightMapSettings);
             lmg.Settings = heightMapSettings;
 
-            return new PortState(Status.SUCCESS);
+            return new PortState(Status.SUCCESS, "", importFile[0]);
         }
 
         /// <summary>
