@@ -69,7 +69,7 @@ namespace LandMassCreator
 		public int MapWidth 
 		{ 
 			get => m_mapWidth; 
-			set => m_mapWidth = value.Clamp(1, 1000);
+			set => m_mapWidth = value.Clamp(2, 1000);
 		}
 
         /// <summary>
@@ -78,7 +78,7 @@ namespace LandMassCreator
         public int MapHeight 
 		{ 
 			get => m_mapHeight; 
-			set => m_mapHeight = value.Clamp(1, 1000); 
+			set => m_mapHeight = value.Clamp(2, 1000); 
 		}
 		
 		/// <summary>

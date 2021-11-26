@@ -56,15 +56,24 @@
     <Analyzer Include="V:\Microsoft Visual Studio\2019\Community\Common7\IDE\Extensions\Microsoft\Visual Studio Tools for Unity\Analyzers\Microsoft.Unity.Analyzers.dll" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Assets\Tools\LandMassCreator\StandaloneFileBrowser\StandaloneFileBrowserEditor.cs" />
+    <Compile Include="Assets\Tools\LandMassCreator\StandaloneFileBrowser\StandaloneFileBrowserWindows.cs" />
     <Compile Include="Assets\Tools\LandMassCreator\Scripts\ExtensionMethods.cs" />
+    <Compile Include="Assets\Tools\LandMassCreator\StandaloneFileBrowser\IStandaloneFileBrowser.cs" />
     <Compile Include="Assets\Tools\LandMassCreator\Scripts\HeightMap.cs" />
+    <Compile Include="Assets\Tools\LandMassCreator\StandaloneFileBrowser\StandaloneFileBrowser.cs" />
+    <Compile Include="Assets\Tools\LandMassCreator\StandaloneFileBrowser\StandaloneFileBrowserLinux.cs" />
+    <Compile Include="Assets\Tools\LandMassCreator\StandaloneFileBrowser\StandaloneFileBrowserMac.cs" />
     <Compile Include="Assets\Tools\LandMassCreator\Scripts\Noise.cs" />
     <Compile Include="Assets\Tools\LandMassCreator\Scripts\HeightMapSettings.cs" />
+    <Compile Include="Assets\Tools\LandMassCreator\Scripts\EditorUtils.cs" />
     <Compile Include="Assets\Tools\LandMassCreator\Scripts\WorldGenerator.cs" />
     <Compile Include="Assets\Tools\LandMassCreator\Scripts\LandmassGenerator.cs" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="Assets\Tools\LandMassCreator\StandaloneFileBrowser\Plugins\System.Windows.Forms.dll" />
     <None Include="Assets\Tools\LandMassCreator\Shader\VertexColor.shader" />
+    <None Include="Assets\Tools\LandMassCreator\StandaloneFileBrowser\Plugins\Ookii.Dialogs.dll" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="UnityEngine">
@@ -288,6 +297,12 @@
     </Reference>
     <Reference Include="UnityEditor.UnityConnectModule">
       <HintPath>V:\Unity\Unity_versions\2020.3.11f1\Editor\Data\Managed\UnityEngine\UnityEditor.UnityConnectModule.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Windows.Forms">
+      <HintPath>Assets\Tools\LandMassCreator\StandaloneFileBrowser\Plugins\System.Windows.Forms.dll</HintPath>
+    </Reference>
+    <Reference Include="Ookii.Dialogs">
+      <HintPath>Assets\Tools\LandMassCreator\StandaloneFileBrowser\Plugins\Ookii.Dialogs.dll</HintPath>
     </Reference>
     <Reference Include="Newtonsoft.Json">
       <HintPath>Library\PackageCache\com.unity.nuget.newtonsoft-json@2.0.0\Runtime\Newtonsoft.Json.dll</HintPath>

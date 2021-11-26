@@ -7,12 +7,12 @@ namespace LandMassCreator
     /// <summary>
     /// Class for all Menu Items
     /// </summary>
-    public static class MenuItems
+    public class MenuItems
     {
         /// <summary>
-        /// Creates a new scene with 
+        /// Creates a new terrain scene 
         /// </summary>
-        [MenuItem("Tools/LandMassCreator/New Terrain")]
+        [MenuItem("Tools/Land Mass Creator/New Terrain")]
         private static void NewTerrain()
         {
             EditorSceneManager.SaveCurrentModifiedScenesIfUserWantsTo();
@@ -42,24 +42,6 @@ namespace LandMassCreator
 
             //Select terrain gameobject
             Selection.activeGameObject = LandmassGeneratorGO;
-        }
-
-        /// <summary>
-        /// Export terrain Settings
-        /// </summary>
-        [MenuItem("Tools/LandMassCreator/Export Terrain Settings")]
-        private static void ExportTerrainSettings()
-        {
-            Debug.LogError("TODO");
-        }
-
-        /// <summary>
-        /// Import terrain Settings
-        /// </summary>
-        [MenuItem("Tools/LandMassCreator/Import Terrain Settings")]
-        private static void ImportTerrainSettings()
-        {
-            Debug.LogError("TODO");
         }
     }
 }

@@ -33,17 +33,17 @@ namespace LandMassCreator
         /// <summary>
         /// Array of tree prefabs
         /// </summary>
-        [SF] private GameObject[] m_treePrefabs;
+        [SF] private GameObject[] m_treePrefabs = null;
 
         /// <summary>
         /// Array of plantprefabs
         /// </summary>
-        [SF] private GameObject[] m_plantPrefabs;
+        [SF] private GameObject[] m_plantPrefabs = null;
 
         /// <summary>
         /// Array of Otherprefabs
         /// </summary>
-        [SF] private GameObject[] m_otherPrefabs;
+        [SF] private GameObject[] m_otherPrefabs = null;
 
         private Mesh World;                                                 //World mesh
         private Vector3[] Vertices;                                         //mesh vertices

@@ -77,15 +77,15 @@ namespace LandMassCreator
             //Draw terrain settings GUI
             EditorGUILayout.LabelField("Terrain Settings", m_skin.label);
             EditorGUILayout.BeginVertical("box");           
-            m_lmg.Settings.MapHeight = EditorGUILayout.IntField("Length", m_lmg.Settings.MapHeight);
-            m_lmg.Settings.MapWidth = EditorGUILayout.IntField("Width", m_lmg.Settings.MapWidth);      
+            m_lmg.Settings.MapHeight = EditorGUILayout.IntField("Length", m_lmg.Settings.MapHeight.Clamp(2, 1000));
+            m_lmg.Settings.MapWidth = EditorGUILayout.IntField("Width", m_lmg.Settings.MapWidth.Clamp(2, 1000));      
             EditorGUILayout.EndVertical();
 
             //Draw noise Settings
             EditorGUILayout.LabelField("Noise Settings", m_skin.label);
             EditorGUILayout.BeginVertical("box");
-            m_lmg.Settings.Seed = EditorGUILayout.IntField("Seed", m_lmg.Settings.Seed.Clamp(1, 1000));
-            m_lmg.Settings.Scale = EditorGUILayout.FloatField("Scale", m_lmg.Settings.Scale.Clamp(1, 1000));
+            m_lmg.Settings.Seed = EditorGUILayout.IntField("Seed", m_lmg.Settings.Seed);
+            m_lmg.Settings.Scale = EditorGUILayout.FloatField("Scale", m_lmg.Settings.Scale);
 
             Vector2 offset = EditorGUILayout.Vector2Field("Scale Offset", new Vector2(m_lmg.Settings.ScaleOffsetX, m_lmg.Settings.ScaleOffsetY));
             m_lmg.Settings.ScaleOffsetX = offset.x;
@@ -112,18 +112,48 @@ namespace LandMassCreator
             EditorGUILayout.PropertyField(m_plantPrefabsProperty, new GUIContent("Plant Prefabs"), true);
             EditorGUILayout.PropertyField(m_otherPrefabsProperty, new GUIContent("Object Prefabs"), true);
             
-            EditorGUILayout.EndVertical();  
-            
-            //Draw Misc Settings
-            EditorGUILayout.LabelField("Fill Terrain Settings", m_skin.label);
+            EditorGUILayout.EndVertical();
+
+            //Draw Generate Terrain Settings
+            EditorGUILayout.LabelField("Generate Terrain", m_skin.label);
             EditorGUILayout.BeginVertical("box");
-            m_lmg.DrawGizmosVertices = EditorGUILayout.Toggle("Show vertices", m_lmg.DrawGizmosVertices);
+            m_lmg.DrawGizmosVertices = EditorGUILayout.Toggle("Show Vertices", m_lmg.DrawGizmosVertices);
             m_lmg.AutoUpdate = EditorGUILayout.Toggle("Auto Update", m_lmg.AutoUpdate);
             
             if (GUILayout.Button("Generate")) 
                 m_lmg.GenerateTerrain();
             
             EditorGUILayout.EndVertical();
+
+            //Draw Import Export Settings
+            EditorGUILayout.LabelField("Export / Import", m_skin.label);
+            EditorGUILayout.BeginHorizontal("box");
+
+            if (GUILayout.Button("Export"))
+            {
+                PortState portState = EditorUtils.ExportTerrainSettings(m_lmg);
+                switch (portState.Status)
+                {
+                    case Status.SUCCESS:
+                        break;
+
+                    case Status.CANCEL:
+                        break;
+
+                    case Status.FAILED:
+                        break;
+
+                    case Status.UNKNOWN:
+                        break;
+                }
+            }
+
+            if (GUILayout.Button("Import"))
+            {
+                EditorUtils.ImportTerrainSettings(m_lmg);
+            }
+
+            EditorGUILayout.EndHorizontal();
         }
     }
 }
