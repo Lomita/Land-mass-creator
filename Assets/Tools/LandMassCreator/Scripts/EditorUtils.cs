@@ -1,8 +1,10 @@
 ﻿using SFB;
+using System;
 using System.IO;
+using System.Runtime.Serialization.Json;
 using System.Text;
+using System.Xml;
 using UnityEngine;
-//using System.Windows.Forms;
 
 namespace LandMassCreator
 {
@@ -90,13 +92,24 @@ namespace LandMassCreator
             string exportFilePath = StandaloneFileBrowser.SaveFilePanel("Select export directory", m_standardPortPath, "terrain", "lmg");
             if (string.IsNullOrEmpty(exportFilePath))
                 return new PortState(Status.CANCEL);
-            
-            FileStream fileStream = new FileStream(exportFilePath, FileMode.Create);
-            bool success = WriteToFileStream(JsonUtility.ToJson(lmg.Settings, true), fileStream);
-            fileStream.Close();
 
-            if (!success) 
-                return new PortState(Status.FAILED, "The writing of the file failed!");
+            DataLMGSettings dataLGM = new DataLMGSettings(lmg.Settings, lmg.AutoUpdate);
+
+            try
+            {
+                DataContractJsonSerializer serializer = new DataContractJsonSerializer(typeof(DataLMGSettings));
+                FileStream fileStream = new FileStream(exportFilePath, FileMode.Create);
+                XmlDictionaryWriter writer = JsonReaderWriterFactory.CreateJsonWriter(fileStream, m_encoding, true, true, "  ");
+
+                serializer.WriteObject(writer, dataLGM);
+                
+                writer.Flush();
+                fileStream.Close();
+            }
+            catch (Exception exception)
+            {
+                return new PortState(Status.FAILED, exception.ToString(), exportFilePath);
+            }
 
             return new PortState(Status.SUCCESS, "", exportFilePath);
         }

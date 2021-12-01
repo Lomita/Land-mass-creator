@@ -1,7 +1,7 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <PropertyGroup>
-    <LangVersion>8.0</LangVersion>
+    <LangVersion>latest</LangVersion>
   </PropertyGroup>
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
@@ -47,19 +47,17 @@
   <PropertyGroup>
     <ProjectTypeGuids>{E097FAD1-6243-4DAD-9C02-E9B9EFC3FFC1};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
     <UnityProjectGenerator>Package</UnityProjectGenerator>
-    <UnityProjectGeneratorVersion>2.0.8</UnityProjectGeneratorVersion>
+    <UnityProjectGeneratorVersion>2.0.12</UnityProjectGeneratorVersion>
     <UnityProjectType>Game:1</UnityProjectType>
     <UnityBuildTarget>StandaloneWindows64:19</UnityBuildTarget>
     <UnityVersion>2020.3.11f1</UnityVersion>
   </PropertyGroup>
   <ItemGroup>
-    <Analyzer Include="V:\Microsoft Visual Studio\2019\Community\Common7\IDE\Extensions\Microsoft\Visual Studio Tools for Unity\Analyzers\Microsoft.Unity.Analyzers.dll" />
-  </ItemGroup>
-  <ItemGroup>
     <Compile Include="Assets\Tools\LandMassCreator\StandaloneFileBrowser\StandaloneFileBrowserEditor.cs" />
     <Compile Include="Assets\Tools\LandMassCreator\StandaloneFileBrowser\StandaloneFileBrowserWindows.cs" />
     <Compile Include="Assets\Tools\LandMassCreator\Scripts\ExtensionMethods.cs" />
     <Compile Include="Assets\Tools\LandMassCreator\StandaloneFileBrowser\IStandaloneFileBrowser.cs" />
+    <Compile Include="Assets\Tools\LandMassCreator\Scripts\DataLMGSettings.cs" />
     <Compile Include="Assets\Tools\LandMassCreator\Scripts\HeightMap.cs" />
     <Compile Include="Assets\Tools\LandMassCreator\StandaloneFileBrowser\StandaloneFileBrowser.cs" />
     <Compile Include="Assets\Tools\LandMassCreator\StandaloneFileBrowser\StandaloneFileBrowserLinux.cs" />
@@ -71,9 +69,9 @@
     <Compile Include="Assets\Tools\LandMassCreator\Scripts\LandmassGenerator.cs" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="Assets\Tools\LandMassCreator\StandaloneFileBrowser\Plugins\System.Windows.Forms.dll" />
     <None Include="Assets\Tools\LandMassCreator\Shader\VertexColor.shader" />
     <None Include="Assets\Tools\LandMassCreator\StandaloneFileBrowser\Plugins\Ookii.Dialogs.dll" />
+    <None Include="Assets\Tools\LandMassCreator\StandaloneFileBrowser\Plugins\System.Windows.Forms.dll" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="UnityEngine">

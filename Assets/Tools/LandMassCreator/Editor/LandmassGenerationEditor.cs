@@ -104,15 +104,18 @@ namespace LandMassCreator
             m_lmg.ColorPalette = EditorGUILayout.GradientField("Vertex Colors", m_lmg.ColorPalette);
             EditorGUILayout.EndVertical();
 
-            //Draw Fill Terrain Settings
+            /* ************ NOT IMPLEMENTED ******************
+             * 
+             * Draw Fill Terrain Settings
             EditorGUILayout.LabelField("Fill Terrain Settings", m_skin.label);
             EditorGUILayout.BeginVertical("box");
-               
+             
             EditorGUILayout.PropertyField(m_treePrefabsProperty, new GUIContent("Tree Prefabs"), true);
             EditorGUILayout.PropertyField(m_plantPrefabsProperty, new GUIContent("Plant Prefabs"), true);
             EditorGUILayout.PropertyField(m_otherPrefabsProperty, new GUIContent("Object Prefabs"), true);
             
             EditorGUILayout.EndVertical();
+            */
 
             //Draw Generate Terrain Settings
             EditorGUILayout.LabelField("Generate Terrain", m_skin.label);

@@ -1,66 +1,78 @@
 ﻿using System;
+using System.Runtime.Serialization;
 
 namespace LandMassCreator
 {
 	/// <summary>
 	/// Stores the necessary settings to create a height map
 	/// </summary>
-	[Serializable]
+	[DataContract]
 	public class HeightMapSettings
 	{
 		/// <summary>
 		/// The map width 
 		/// </summary>
-		public int m_mapWidth = 200;
-		
+		[DataMember(Name = "Map Width")]
+		private int m_mapWidth = 200;
+
 		/// <summary>
 		/// The map Height
 		/// </summary>
+		[DataMember(Name = "Map Height")]
 		private int m_mapHeight = 200;
-		
+
 		/// <summary>
 		/// Random map seed
 		/// </summary>
+		[DataMember(Name = "Seed")]
 		private int m_seed = 0;
-		
+
 		/// <summary>
 		/// Noise scale
 		/// </summary>
+		[DataMember(Name = "Noise Scale")]
 		private float m_scale = 4.0f;
-		
+
 		/// <summary>
 		/// Noise offset X axis
 		/// </summary>
+		[DataMember(Name = "Scale Offset X")]
 		private float m_scaleOffsetX = 0.0f;
-		
+
 		/// <summary>
 		/// Noise offset Y axis
 		/// </summary>
+		[DataMember(Name = "Scale Offset Y")]
 		private float m_scaleOffsetY = 0.0f;
-		
+
 		/// <summary>
 		/// The amount of noise iterations 
 		/// </summary>
+		[DataMember(Name = "Octaves")]
 		private int m_octaves = 6;
-		
+
 		/// <summary>
 		/// The persistance of equal noise values
 		/// </summary>
+		[DataMember(Name = "Persistance")]
 		private float m_persistance = 2.0f;
-		
+
 		/// <summary>
 		/// The density of equal noise values
 		/// </summary>
+		[DataMember(Name = "Density")]
 		private float m_density = 0.45f;
-		
+
 		/// <summary>
 		/// Cap minimal values
 		/// </summary>
+		[DataMember(Name = "Ocean Level")]
 		private float m_oceanLevel = 0.0f;
-		
+
 		/// <summary>
 		/// Cap maximal values
 		/// </summary>
+		[DataMember(Name = "Max MountainHeight")]
 		private float m_CapMountainHeight = 200.0f;
 
 		/// <summary>
