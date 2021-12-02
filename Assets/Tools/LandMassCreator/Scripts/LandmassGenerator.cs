@@ -30,6 +30,7 @@ namespace LandMassCreator
         /// </summary>
         private bool m_drawGizmosVertices = false;
 
+        /*
         /// <summary>
         /// Array of tree prefabs
         /// </summary>
@@ -44,6 +45,7 @@ namespace LandMassCreator
         /// Array of Otherprefabs
         /// </summary>
         [SF] private GameObject[] m_otherPrefabs = null;
+        */
 
         private Mesh World;                                                 //World mesh
         private Vector3[] Vertices;                                         //mesh vertices
@@ -70,6 +72,7 @@ namespace LandMassCreator
         /// </summary>
         public bool AutoUpdate { get => m_autoUpdate; set => m_autoUpdate = value; }
         
+        /*
         /// <summary>
         /// Gets and Sets tree prefabs
         /// </summary>
@@ -84,6 +87,7 @@ namespace LandMassCreator
         /// Gets and Sets other prefabs
         /// </summary>
         public GameObject[] OtherPrefabs { get => m_otherPrefabs; set => m_otherPrefabs = value; }
+        */
 
         /// <summary>
         /// Generates the terrain

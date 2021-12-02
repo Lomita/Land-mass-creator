@@ -105,13 +105,16 @@ namespace LandMassCreator
                 
                 writer.Flush();
                 fileStream.Close();
+
+                if(!File.Exists(exportFilePath))
+                    throw new Exception("Failed to export settings");
             }
             catch (Exception exception)
             {
                 return new PortState(Status.FAILED, exception.ToString(), exportFilePath);
             }
 
-            return new PortState(Status.SUCCESS, "", exportFilePath);
+            return new PortState(Status.SUCCESS, "", Path.GetDirectoryName(exportFilePath));
         }
 
         /// <summary>
@@ -123,27 +126,33 @@ namespace LandMassCreator
             string[] importFile = StandaloneFileBrowser.OpenFilePanel("Select terrain settings for import", m_standardPortPath, "lmg", false);
             if (importFile.Equals(null) || importFile.Length.Equals(0) || string.IsNullOrEmpty(importFile[0]))
                 return new PortState(Status.CANCEL);
-
-            DataLMGSettings serLMG = null;
-            
+    
             try
             {
+                if(!File.Exists(importFile[0]))
+                    throw new Exception("File " + importFile[0] + " doesnt exist.");
+
+                DataLMGSettings serLMG;
                 DataContractJsonSerializer serializer = new DataContractJsonSerializer(typeof(DataLMGSettings));
                 FileStream fileStream = new FileStream(importFile[0], FileMode.Open);
                 serLMG = (DataLMGSettings)serializer.ReadObject(fileStream);
                 if (serLMG == null) 
-                    throw new Exception();
+                    throw new Exception("Failed to deserialize settings!");
+
+                lmg.Settings = serLMG.HeightMapSettings;
+                lmg.AutoUpdate = serLMG.AutoUpdate;
+                lmg.DrawGizmosVertices = serLMG.DrawGizmosVertices;
+                lmg.ColorPalette = serLMG.VertexColors.ConvertToUnityGradient();
+
+                if (!lmg.AutoUpdate)
+                    lmg.GenerateTerrain();
+
             }
             catch (Exception exception)
             {
                 return new PortState(Status.FAILED, exception.ToString(), importFile[0]);
             }
 
-            lmg.Settings = serLMG.HeightMapSettings;
-            lmg.AutoUpdate = serLMG.AutoUpdate;
-            lmg.DrawGizmosVertices = serLMG.DrawGizmosVertices;
-            lmg.ColorPalette = serLMG.VertexColors.ConvertToUnityGradient();
-              
             return new PortState(Status.SUCCESS, "", importFile[0]);
         }
     }

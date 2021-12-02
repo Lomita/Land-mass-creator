@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using UnityEditor;
+using System.Diagnostics;
 
 namespace LandMassCreator
 {
@@ -14,6 +15,7 @@ namespace LandMassCreator
         /// </summary>
         private LandmassGenerator m_lmg = null;
         
+        /*
         /// <summary>
         /// Serialized LandmassGenerator
         /// </summary>
@@ -33,6 +35,7 @@ namespace LandMassCreator
         /// Holds the serialized other prefabs property 
         /// </summary>
         private SerializedProperty m_otherPrefabsProperty = null;
+        */
 
         /// <summary>
         /// GUI style skin
@@ -48,12 +51,16 @@ namespace LandMassCreator
             m_skin = (GUISkin)Resources.Load("LMC_GUISkin");
 
             //get serialized properties from landmasgenerator
+
+            /*
             m_serializedLgm = new SerializedObject(target);
+            
             m_treePrefabsProperty = m_serializedLgm.FindProperty("m_treePrefabs");
             m_plantPrefabsProperty = m_serializedLgm.FindProperty("m_plantPrefabs");
             m_otherPrefabsProperty = m_serializedLgm.FindProperty("m_otherPrefabs");
 
-            m_lmg.GenerateTerrain();
+            m_lmg.GenerateTerrain();            
+            */
         }
 
         /// <summary>
@@ -77,8 +84,8 @@ namespace LandMassCreator
             //Draw terrain settings GUI
             EditorGUILayout.LabelField("Terrain Settings", m_skin.label);
             EditorGUILayout.BeginVertical("box");           
-            m_lmg.Settings.MapHeight = EditorGUILayout.IntField("Length", m_lmg.Settings.MapHeight.Clamp(2, 1000));
-            m_lmg.Settings.MapWidth = EditorGUILayout.IntField("Width", m_lmg.Settings.MapWidth.Clamp(2, 1000));      
+            m_lmg.Settings.MapHeight = EditorGUILayout.IntField("Length", m_lmg.Settings.MapHeight.Clamp(2, 200));
+            m_lmg.Settings.MapWidth = EditorGUILayout.IntField("Width", m_lmg.Settings.MapWidth.Clamp(2, 200));      
             EditorGUILayout.EndVertical();
 
             //Draw noise Settings
@@ -135,46 +142,63 @@ namespace LandMassCreator
             if (GUILayout.Button("Export"))
             {
                 PortState portState = EditorUtils.ExportTerrainSettings(m_lmg);
+
                 switch (portState.Status)
                 {
                     case Status.SUCCESS:
-                        Debug.Log("Export SUCCESS");
-                        break;
+                    {
+                        //Debug.Log("Export SUCCESS");
+                        if (EditorUtility.DisplayDialog("Export Success",
+                            "Would you like to open the export folder?", "Yes", "No"))
+                        {
+#if UNITY_STANDALONE_OSX
+                            Process.Start("open", portState.Path);
+#elif UNITY_STANDALONE_WIN
+                            Process.Start("explorer.exe", portState.Path);
+#elif UNITY_STANDALONE_LINUX
+                            Process.Start("xdg-open", portState.Path);
+#endif
+                            }
+                        }
+                    break;
 
                     case Status.CANCEL:
-                        Debug.Log("Export CANCEL");
+                        //Debug.Log("Export CANCEL");
                         break;
 
                     case Status.FAILED:
-                        Debug.Log("Export FAILED");
-                        break;
-
                     case Status.UNKNOWN:
-                        Debug.Log("Export UNKNOWN");
-                        break;
+                    {
+                        //Debug.LogError("Export FAILED or UNKNOWN");
+                        EditorUtility.DisplayDialog("Export Failed",
+                            "Error: " + portState.Msg, "Ok");
+                    }
+                    break;
                 }
             }
 
             if (GUILayout.Button("Import"))
             {
                 PortState portState = EditorUtils.ImportTerrainSettings(m_lmg);
+                
                 switch (portState.Status)
                 {
                     case Status.SUCCESS:
-                        Debug.Log("Import SUCCESS");
+                        //Debug.Log("Import SUCCESS");
                         break;
 
                     case Status.CANCEL:
-                        Debug.Log("Import CANCEL");
+                        //Debug.Log("Import CANCEL");
                         break;
 
                     case Status.FAILED:
-                        Debug.Log("Import FAILED");
-                        break;
-
                     case Status.UNKNOWN:
-                        Debug.Log("Import UNKNOWN");
-                        break;
+                    {
+                        //Debug.LogError("IMport FAILED or UNKNOWN");
+                        EditorUtility.DisplayDialog("Import Failed",
+                            "Error: " + portState.Msg, "Ok");
+                    }
+                    break;
                 }
             }
 
