@@ -134,7 +134,8 @@ namespace LandMassCreator
         public Gradient ConvertToUnityGradient()
         {
             Gradient vertexColors = new Gradient();
-            
+            vertexColors.mode = (GradientMode)m_mode;
+
             GradientAlphaKey[] alphaKeys;
             GradientColorKey[] colorKeys;
 

@@ -144,60 +144,7 @@ namespace LandMassCreator
             lmg.DrawGizmosVertices = serLMG.DrawGizmosVertices;
             lmg.ColorPalette = serLMG.VertexColors.ConvertToUnityGradient();
               
-            /*
-            string json = "";
-            FileStream fileStream = new FileStream(importFile[0], FileMode.Open);
-            bool success = ReadFileStream(fileStream, out json);          
-            fileStream.Close();
-
-
-            if (string.IsNullOrEmpty(json))
-                return new PortState(Status.FAILED, "Could not read terrain settings");
-
-            HeightMapSettings heightMapSettings = new HeightMapSettings();
-            JsonUtility.FromJsonOverwrite(json, heightMapSettings);
-            lmg.Settings = heightMapSettings;
-            */
-
             return new PortState(Status.SUCCESS, "", importFile[0]);
-        }
-
-        /// <summary>
-        /// Write a string to filestream
-        /// </summary>
-        /// <param name="write">The string that will be written to the data stream</param>
-        /// <param name="fileStream">The filestream to write to</param>
-        /// <returns>Returns true if successful</returns>
-        private static bool WriteToFileStream(string write, FileStream fileStream)
-        {
-            if (write.Length > 0)
-            {
-                byte[] bytes = m_encoding.GetBytes(write);
-                fileStream.Write(bytes, 0, bytes.Length);
-                return true;
-            }
-            return false;
-        }
-
-        /// <summary>
-        /// Read a filestream to content string
-        /// </summary>
-        /// <param name="fileStream">The filestream to read from</param>
-        /// <param name="content">Stores the contntent from the filestream</param>
-        /// <returns></returns>
-        private static bool ReadFileStream(FileStream fileStream, out string content)
-        {
-            content = "";
-            if (fileStream.Length > 0)
-            {
-                byte[] bytes = new byte[fileStream.Length];
-                fileStream.Read(bytes, 0, (int)fileStream.Length);
-                content = m_encoding.GetString(bytes);
-
-                return true;
-            }
-
-            return false;
         }
     }
 }
