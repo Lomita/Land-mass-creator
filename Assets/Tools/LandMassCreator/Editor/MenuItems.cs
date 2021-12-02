@@ -10,16 +10,35 @@ namespace LandMassCreator
     public class MenuItems
     {
         /// <summary>
-        /// Creates a new terrain scene 
+        /// Create a new terrain current scene
         /// </summary>
         [MenuItem("Tools/Land Mass Creator/New Terrain")]
         private static void NewTerrain()
+        {
+            //landmass generator
+            GameObject LandmassGeneratorGO = new GameObject("Terrain");
+            LandmassGeneratorGO.AddComponent<LandmassGenerator>();
+            LandmassGeneratorGO.AddComponent<MeshFilter>();
+            MeshRenderer renderer = LandmassGeneratorGO.AddComponent<MeshRenderer>();
+            renderer.material = new Material(Shader.Find("Custom/VertexColor"));
+
+            //Select terrain gameobject
+            Selection.activeGameObject = LandmassGeneratorGO;
+        }
+
+        /// <summary>
+        /// Creates a new terrain scene 
+        /// </summary>
+        [MenuItem("Tools/Land Mass Creator/New Scene + Terrain")]
+        private static void NewSceneTerrain()
         {
             EditorSceneManager.SaveCurrentModifiedScenesIfUserWantsTo();
 
             //New Scene
             UnityEngine.SceneManagement.Scene newScene = EditorSceneManager.NewScene(NewSceneSetup.EmptyScene);
             newScene.name = "New Terrain";
+
+            EditorSceneManager.MarkSceneDirty(newScene);
 
             //lighting
             GameObject directionalLightGO = new GameObject("Directional Light");
@@ -33,15 +52,7 @@ namespace LandMassCreator
             light.shadowNormalBias = 0.4f;
             light.shadowNearPlane = 0.2f;
 
-            //landmass generator
-            GameObject LandmassGeneratorGO = new GameObject("Terrain");
-            LandmassGeneratorGO.AddComponent<LandmassGenerator>();
-            LandmassGeneratorGO.AddComponent<MeshFilter>();
-            MeshRenderer renderer = LandmassGeneratorGO.AddComponent<MeshRenderer>();
-            renderer.material = new Material(Shader.Find("Custom/VertexColor"));
-
-            //Select terrain gameobject
-            Selection.activeGameObject = LandmassGeneratorGO;
-        }
+            NewTerrain();
+        }      
     }
 }
