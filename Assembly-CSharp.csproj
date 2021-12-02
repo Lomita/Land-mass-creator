@@ -57,7 +57,7 @@
     <Compile Include="Assets\Tools\LandMassCreator\StandaloneFileBrowser\StandaloneFileBrowserWindows.cs" />
     <Compile Include="Assets\Tools\LandMassCreator\Scripts\ExtensionMethods.cs" />
     <Compile Include="Assets\Tools\LandMassCreator\StandaloneFileBrowser\IStandaloneFileBrowser.cs" />
-    <Compile Include="Assets\Tools\LandMassCreator\Scripts\DataLMGSettings.cs" />
+    <Compile Include="Assets\Tools\LandMassCreator\Scripts\DataLMGContract.cs" />
     <Compile Include="Assets\Tools\LandMassCreator\Scripts\HeightMap.cs" />
     <Compile Include="Assets\Tools\LandMassCreator\StandaloneFileBrowser\StandaloneFileBrowser.cs" />
     <Compile Include="Assets\Tools\LandMassCreator\StandaloneFileBrowser\StandaloneFileBrowserLinux.cs" />

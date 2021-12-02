@@ -93,7 +93,7 @@ namespace LandMassCreator
             if (string.IsNullOrEmpty(exportFilePath))
                 return new PortState(Status.CANCEL);
 
-            DataLMGSettings dataLGM = new DataLMGSettings(lmg.Settings, lmg.AutoUpdate);
+            DataLMGSettings dataLGM = new DataLMGSettings(lmg);
 
             try
             {
@@ -124,10 +124,32 @@ namespace LandMassCreator
             if (importFile.Equals(null) || importFile.Length.Equals(0) || string.IsNullOrEmpty(importFile[0]))
                 return new PortState(Status.CANCEL);
 
+            DataLMGSettings serLMG = null;
+            
+            try
+            {
+                DataContractJsonSerializer serializer = new DataContractJsonSerializer(typeof(DataLMGSettings));
+                FileStream fileStream = new FileStream(importFile[0], FileMode.Open);
+                serLMG = (DataLMGSettings)serializer.ReadObject(fileStream);
+                if (serLMG == null) 
+                    throw new Exception();
+            }
+            catch (Exception exception)
+            {
+                return new PortState(Status.FAILED, exception.ToString(), importFile[0]);
+            }
+
+            lmg.Settings = serLMG.HeightMapSettings;
+            lmg.AutoUpdate = serLMG.AutoUpdate;
+            lmg.DrawGizmosVertices = serLMG.DrawGizmosVertices;
+            lmg.ColorPalette = serLMG.VertexColors.ConvertToUnityGradient();
+              
+            /*
             string json = "";
             FileStream fileStream = new FileStream(importFile[0], FileMode.Open);
             bool success = ReadFileStream(fileStream, out json);          
             fileStream.Close();
+
 
             if (string.IsNullOrEmpty(json))
                 return new PortState(Status.FAILED, "Could not read terrain settings");
@@ -135,6 +157,7 @@ namespace LandMassCreator
             HeightMapSettings heightMapSettings = new HeightMapSettings();
             JsonUtility.FromJsonOverwrite(json, heightMapSettings);
             lmg.Settings = heightMapSettings;
+            */
 
             return new PortState(Status.SUCCESS, "", importFile[0]);
         }
