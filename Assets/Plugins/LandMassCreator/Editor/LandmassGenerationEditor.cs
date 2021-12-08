@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using UnityEditor;
+using UnityEditor.SceneManagement;
 using System.Diagnostics;
 
 namespace LandMassCreator
@@ -14,28 +15,6 @@ namespace LandMassCreator
         /// The target of this custom editor LandmassGenerator
         /// </summary>
         private LandmassGenerator m_lmg = null;
-        
-        /*
-        /// <summary>
-        /// Serialized LandmassGenerator
-        /// </summary>
-        private SerializedObject m_serializedLgm = null;
-
-        /// <summary>
-        /// Holds the serialized tree prefabs property 
-        /// </summary>
-        private SerializedProperty m_treePrefabsProperty = null;
-
-        /// <summary>
-        /// Holds the serialized plant prefabs property 
-        /// </summary>
-        private SerializedProperty m_plantPrefabsProperty = null;
-
-        /// <summary>
-        /// Holds the serialized other prefabs property 
-        /// </summary>
-        private SerializedProperty m_otherPrefabsProperty = null;
-        */
 
         /// <summary>
         /// GUI style skin
@@ -49,18 +28,6 @@ namespace LandMassCreator
         {
             m_lmg = (LandmassGenerator)target;
             m_skin = (GUISkin)Resources.Load("LMC_GUISkin");
-
-            //get serialized properties from landmasgenerator
-
-            /*
-            m_serializedLgm = new SerializedObject(target);
-            
-            m_treePrefabsProperty = m_serializedLgm.FindProperty("m_treePrefabs");
-            m_plantPrefabsProperty = m_serializedLgm.FindProperty("m_plantPrefabs");
-            m_otherPrefabsProperty = m_serializedLgm.FindProperty("m_otherPrefabs");
-
-            m_lmg.GenerateTerrain();            
-            */
         }
 
         /// <summary>
@@ -69,6 +36,10 @@ namespace LandMassCreator
         public override void OnInspectorGUI()
         {
             DrawGUI();
+
+            if (GUI.changed)
+                EditorSceneManager.MarkSceneDirty(EditorSceneManager.GetActiveScene());
+                
             if (m_lmg.AutoUpdate)
                 m_lmg.GenerateTerrain();
         }
@@ -78,64 +49,84 @@ namespace LandMassCreator
         /// </summary>
         private void DrawGUI()
         {
-            if (m_lmg.Settings == null)
-                return;
+            serializedObject.Update();
+
+            DrawGUINoiseSettings();
+            DrawGUIColorSettings();
+            DrawGUIGenerateSettings();
+            DrawGUIExportImportSettings();
+
+            serializedObject.ApplyModifiedProperties();
+        }
+
+        /// <summary>
+        /// Draw GUI noise settings
+        /// </summary>
+        private void DrawGUINoiseSettings()
+        {
+            SerializedProperty heightMapProperty = serializedObject.FindProperty("m_settings");
 
             //Draw terrain settings GUI
             EditorGUILayout.LabelField("Terrain Settings", m_skin.label);
-            EditorGUILayout.BeginVertical("box");           
-            m_lmg.Settings.MapHeight = EditorGUILayout.IntField("Length", m_lmg.Settings.MapHeight.Clamp(2, 200));
-            m_lmg.Settings.MapWidth = EditorGUILayout.IntField("Width", m_lmg.Settings.MapWidth.Clamp(2, 200));      
+            EditorGUILayout.BeginVertical("box");
+
+            heightMapProperty.FindPropertyRelative("m_mapHeight").intValue = EditorGUILayout.IntField("Length", m_lmg.Settings.MapHeight).Clamp(2, 200);
+            heightMapProperty.FindPropertyRelative("m_mapWidth").intValue = EditorGUILayout.IntField("Width", m_lmg.Settings.MapWidth).Clamp(2, 200);
+
             EditorGUILayout.EndVertical();
 
             //Draw noise Settings
             EditorGUILayout.LabelField("Noise Settings", m_skin.label);
             EditorGUILayout.BeginVertical("box");
-            m_lmg.Settings.Seed = EditorGUILayout.IntField("Seed", m_lmg.Settings.Seed);
-            m_lmg.Settings.Scale = EditorGUILayout.FloatField("Scale", m_lmg.Settings.Scale);
+            heightMapProperty.FindPropertyRelative("m_seed").intValue = EditorGUILayout.IntField("Seed", m_lmg.Settings.Seed);
+            heightMapProperty.FindPropertyRelative("m_scale").floatValue = EditorGUILayout.FloatField("Scale", m_lmg.Settings.Scale);
 
             Vector2 offset = EditorGUILayout.Vector2Field("Scale Offset", new Vector2(m_lmg.Settings.ScaleOffsetX, m_lmg.Settings.ScaleOffsetY));
-            m_lmg.Settings.ScaleOffsetX = offset.x;
-            m_lmg.Settings.ScaleOffsetY = offset.y;
+            heightMapProperty.FindPropertyRelative("m_scaleOffsetX").floatValue = offset.x;
+            heightMapProperty.FindPropertyRelative("m_scaleOffsetY").floatValue = offset.y;
 
-            m_lmg.Settings.Octaves = EditorGUILayout.IntField("Octaves", m_lmg.Settings.Octaves.Clamp(1, 15));
-            m_lmg.Settings.Persistance = EditorGUILayout.Slider("Persistance", m_lmg.Settings.Persistance, 0.0f, 5.0f);
-            m_lmg.Settings.Density = EditorGUILayout.Slider("Density", m_lmg.Settings.Density, 0.0f, 1.0f);
-            m_lmg.Settings.OceanLevel = EditorGUILayout.FloatField("Ocean Level", m_lmg.Settings.OceanLevel);
-            m_lmg.Settings.CapMountainHeight = EditorGUILayout.FloatField("Max Mountain Height", m_lmg.Settings.CapMountainHeight);
+            heightMapProperty.FindPropertyRelative("m_octaves").intValue = EditorGUILayout.IntField("Octaves", m_lmg.Settings.Octaves).Clamp(1, 15); ;
+            heightMapProperty.FindPropertyRelative("m_persistance").floatValue = EditorGUILayout.Slider("Persistance", m_lmg.Settings.Persistance, 0.0f, 5.0f).Clamp(0.0f, 5.0f);
+            heightMapProperty.FindPropertyRelative("m_density").floatValue = EditorGUILayout.Slider("Density", m_lmg.Settings.Density, 0.0f, 1.0f).Clamp(0.0f, 1.0f);
+            heightMapProperty.FindPropertyRelative("m_oceanLevel").floatValue = EditorGUILayout.FloatField("Ocean Level", m_lmg.Settings.OceanLevel);
+            heightMapProperty.FindPropertyRelative("m_CapMountainHeight").floatValue = EditorGUILayout.FloatField("Max Mountain Height", m_lmg.Settings.CapMountainHeight);
+            
             EditorGUILayout.EndVertical();
+        }
 
-            //Draw color Settings
+        /// <summary>
+        /// Draw GUI color settings
+        /// </summary>
+        private void DrawGUIColorSettings()
+        {
             EditorGUILayout.LabelField("Color Settings", m_skin.label);
             EditorGUILayout.BeginVertical("box");
-            m_lmg.ColorPalette = EditorGUILayout.GradientField("Vertex Colors", m_lmg.ColorPalette);
+            EditorGUILayout.PropertyField(serializedObject.FindProperty("m_colorPalette"), new GUIContent("Vertex Colors"));
             EditorGUILayout.EndVertical();
+        }
 
-            /* ************ NOT IMPLEMENTED ******************
-             * 
-             * Draw Fill Terrain Settings
-            EditorGUILayout.LabelField("Fill Terrain Settings", m_skin.label);
-            EditorGUILayout.BeginVertical("box");
-             
-            EditorGUILayout.PropertyField(m_treePrefabsProperty, new GUIContent("Tree Prefabs"), true);
-            EditorGUILayout.PropertyField(m_plantPrefabsProperty, new GUIContent("Plant Prefabs"), true);
-            EditorGUILayout.PropertyField(m_otherPrefabsProperty, new GUIContent("Object Prefabs"), true);
-            
-            EditorGUILayout.EndVertical();
-            */
-
-            //Draw Generate Terrain Settings
+        /// <summary>
+        /// Draw GUI generate settings
+        /// </summary>
+        private void DrawGUIGenerateSettings()
+        {
             EditorGUILayout.LabelField("Generate Terrain", m_skin.label);
             EditorGUILayout.BeginVertical("box");
-            m_lmg.DrawGizmosVertices = EditorGUILayout.Toggle("Show Vertices", m_lmg.DrawGizmosVertices);
-            m_lmg.AutoUpdate = EditorGUILayout.Toggle("Auto Update", m_lmg.AutoUpdate);
-            
-            if (GUILayout.Button("Generate")) 
-                m_lmg.GenerateTerrain();
-            
-            EditorGUILayout.EndVertical();
 
-            //Draw Import Export Settings
+            serializedObject.FindProperty("m_drawGizmosVertices").boolValue = EditorGUILayout.Toggle("Show Vertices", m_lmg.DrawGizmosVertices);
+            serializedObject.FindProperty("m_autoUpdate").boolValue = EditorGUILayout.Toggle("Auto Update", m_lmg.AutoUpdate);
+
+            if (GUILayout.Button("Generate"))
+                m_lmg.GenerateTerrain();
+
+            EditorGUILayout.EndVertical();
+        }
+
+        /// <summary>
+        /// Draw GUI export import settings
+        /// </summary>
+        private void DrawGUIExportImportSettings()
+        {
             EditorGUILayout.LabelField("Export / Import", m_skin.label);
             EditorGUILayout.BeginHorizontal("box");
 
@@ -158,47 +149,45 @@ namespace LandMassCreator
 #elif UNITY_STANDALONE_LINUX
                             Process.Start("xdg-open", portState.Path);
 #endif
-                            }
                         }
-                    break;
+                            break;
+                    }                 
 
                     case Status.CANCEL:
-                        //Debug.Log("Export CANCEL");
                         break;
 
                     case Status.FAILED:
                     case Status.UNKNOWN:
                     {
-                        //Debug.LogError("Export FAILED or UNKNOWN");
                         EditorUtility.DisplayDialog("Export Failed",
                             "Error: " + portState.Msg, "Ok");
+                        break;
                     }
-                    break;
                 }
             }
 
             if (GUILayout.Button("Import"))
             {
                 PortState portState = EditorUtils.ImportTerrainSettings(m_lmg);
-                
+
                 switch (portState.Status)
                 {
                     case Status.SUCCESS:
-                        //Debug.Log("Import SUCCESS");
+                    {
+                        Repaint();
                         break;
-
+                    }                  
+                
                     case Status.CANCEL:
-                        //Debug.Log("Import CANCEL");
                         break;
 
                     case Status.FAILED:
                     case Status.UNKNOWN:
                     {
-                        //Debug.LogError("IMport FAILED or UNKNOWN");
                         EditorUtility.DisplayDialog("Import Failed",
                             "Error: " + portState.Msg, "Ok");
-                    }
-                    break;
+                        break;
+                    }                
                 }
             }
 

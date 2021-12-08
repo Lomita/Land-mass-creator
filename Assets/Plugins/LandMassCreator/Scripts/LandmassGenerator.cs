@@ -8,8 +8,8 @@ namespace LandMassCreator
         /// <summary>
         /// Height map settings
         /// </summary>
-        private HeightMapSettings m_settings = new HeightMapSettings();
-        
+        [SF] private HeightMapSettings m_settings = new HeightMapSettings();
+
         /// <summary>
         /// Generated height map
         /// </summary>
@@ -18,34 +18,17 @@ namespace LandMassCreator
         /// <summary>
         /// gradiant for height colors
         /// </summary>
-        private Gradient m_colorPalette = new Gradient();
+        [SF] private Gradient m_colorPalette = new Gradient();
 
         /// <summary>
         /// Auto updates all values if checked
         /// </summary>
-        private bool m_autoUpdate = true;
+        [SF] private bool m_autoUpdate = true;
 
         /// <summary>
         /// Draw all vertices
         /// </summary>
-        private bool m_drawGizmosVertices = false;
-
-        /*
-        /// <summary>
-        /// Array of tree prefabs
-        /// </summary>
-        [SF] private GameObject[] m_treePrefabs = null;
-
-        /// <summary>
-        /// Array of plantprefabs
-        /// </summary>
-        [SF] private GameObject[] m_plantPrefabs = null;
-
-        /// <summary>
-        /// Array of Otherprefabs
-        /// </summary>
-        [SF] private GameObject[] m_otherPrefabs = null;
-        */
+        [SF] private bool m_drawGizmosVertices = false;
 
         private Mesh World;                                                 //World mesh
         private Vector3[] Vertices;                                         //mesh vertices
@@ -72,23 +55,6 @@ namespace LandMassCreator
         /// </summary>
         public bool AutoUpdate { get => m_autoUpdate; set => m_autoUpdate = value; }
         
-        /*
-        /// <summary>
-        /// Gets and Sets tree prefabs
-        /// </summary>
-        public GameObject[] TreePrefabs { get => m_treePrefabs; set => m_treePrefabs = value; }
-
-        /// <summary>
-        /// Gets and Sets plant prefabs
-        /// </summary>
-        public GameObject[] PlantPrefabs { get => m_plantPrefabs; set => m_plantPrefabs = value; }
-
-        /// <summary>
-        /// Gets and Sets other prefabs
-        /// </summary>
-        public GameObject[] OtherPrefabs { get => m_otherPrefabs; set => m_otherPrefabs = value; }
-        */
-
         /// <summary>
         /// Generates the terrain
         /// </summary>
@@ -96,13 +62,6 @@ namespace LandMassCreator
         {
             m_map = Noise.GenerateHeightMap(Settings);
             DrawTriangles();
-
-            /*
-            if (!Application.isPlaying)
-                Debug.Log("World not getting filled if in editor mode =) !!!!");
-            else
-                FillWorld();
-            */
         }
 
         /// <summary>
@@ -181,7 +140,7 @@ namespace LandMassCreator
             Color oldCol = Gizmos.color;
             Gizmos.color = Color.magenta;
             for (int idx = 0; idx < Vertices.Length; idx++)
-                Gizmos.DrawCube(Vertices[idx], new Vector3(0.1f, 0.1f, 0.1f));
+                Gizmos.DrawCube(Vertices[idx] + transform.position, new Vector3(0.1f, 0.1f, 0.1f));
 
             Gizmos.color = oldCol;
         }

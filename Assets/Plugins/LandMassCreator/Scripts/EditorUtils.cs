@@ -29,6 +29,7 @@ namespace LandMassCreator
         /// </summary>
         /// <param name="status">Import or export status</param>
         /// <param name="msg">Import or export status message</param>
+        /// <param name="path">Import or export path</param>
         public PortState(Status status, string msg = "", string path = "") : this()
         {
             m_status = status;
