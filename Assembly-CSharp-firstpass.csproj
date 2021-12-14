@@ -53,15 +53,15 @@
     <UnityVersion>2020.3.11f1</UnityVersion>
   </PropertyGroup>
   <ItemGroup>
-    <Compile Include="Assets\Plugins\LandMassCreator\StandaloneFileBrowser\StandaloneFileBrowserEditor.cs" />
-    <Compile Include="Assets\Plugins\LandMassCreator\StandaloneFileBrowser\StandaloneFileBrowserWindows.cs" />
+    <Compile Include="Assets\Plugins\StandaloneFileBrowser\StandaloneFileBrowserEditor.cs" />
+    <Compile Include="Assets\Plugins\StandaloneFileBrowser\StandaloneFileBrowserWindows.cs" />
     <Compile Include="Assets\Plugins\LandMassCreator\Scripts\ExtensionMethods.cs" />
-    <Compile Include="Assets\Plugins\LandMassCreator\StandaloneFileBrowser\IStandaloneFileBrowser.cs" />
+    <Compile Include="Assets\Plugins\StandaloneFileBrowser\IStandaloneFileBrowser.cs" />
     <Compile Include="Assets\Plugins\LandMassCreator\Scripts\DataLMGContract.cs" />
     <Compile Include="Assets\Plugins\LandMassCreator\Scripts\HeightMap.cs" />
-    <Compile Include="Assets\Plugins\LandMassCreator\StandaloneFileBrowser\StandaloneFileBrowser.cs" />
-    <Compile Include="Assets\Plugins\LandMassCreator\StandaloneFileBrowser\StandaloneFileBrowserLinux.cs" />
-    <Compile Include="Assets\Plugins\LandMassCreator\StandaloneFileBrowser\StandaloneFileBrowserMac.cs" />
+    <Compile Include="Assets\Plugins\StandaloneFileBrowser\StandaloneFileBrowser.cs" />
+    <Compile Include="Assets\Plugins\StandaloneFileBrowser\StandaloneFileBrowserLinux.cs" />
+    <Compile Include="Assets\Plugins\StandaloneFileBrowser\StandaloneFileBrowserMac.cs" />
     <Compile Include="Assets\Plugins\LandMassCreator\Scripts\Noise.cs" />
     <Compile Include="Assets\Plugins\LandMassCreator\Scripts\HeightMapSettings.cs" />
     <Compile Include="Assets\Plugins\LandMassCreator\Scripts\EditorUtils.cs" />
@@ -69,8 +69,8 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="Assets\Plugins\LandMassCreator\Shader\VertexColor.shader" />
-    <None Include="Assets\Plugins\LandMassCreator\StandaloneFileBrowser\Plugins\Ookii.Dialogs.dll" />
-    <None Include="Assets\Plugins\LandMassCreator\StandaloneFileBrowser\Plugins\System.Windows.Forms.dll" />
+    <None Include="Assets\Plugins\StandaloneFileBrowser\Plugins\Ookii.Dialogs.dll" />
+    <None Include="Assets\Plugins\StandaloneFileBrowser\Plugins\System.Windows.Forms.dll" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="UnityEngine">
@@ -295,14 +295,14 @@
     <Reference Include="UnityEditor.UnityConnectModule">
       <HintPath>V:\Unity\Unity_versions\2020.3.11f1\Editor\Data\Managed\UnityEngine\UnityEditor.UnityConnectModule.dll</HintPath>
     </Reference>
-    <Reference Include="Ookii.Dialogs">
-      <HintPath>Assets\Plugins\LandMassCreator\StandaloneFileBrowser\Plugins\Ookii.Dialogs.dll</HintPath>
-    </Reference>
     <Reference Include="Newtonsoft.Json">
       <HintPath>Library\PackageCache\com.unity.nuget.newtonsoft-json@2.0.0\Runtime\Newtonsoft.Json.dll</HintPath>
     </Reference>
+    <Reference Include="Ookii.Dialogs">
+      <HintPath>Assets\Plugins\StandaloneFileBrowser\Plugins\Ookii.Dialogs.dll</HintPath>
+    </Reference>
     <Reference Include="System.Windows.Forms">
-      <HintPath>Assets\Plugins\LandMassCreator\StandaloneFileBrowser\Plugins\System.Windows.Forms.dll</HintPath>
+      <HintPath>Assets\Plugins\StandaloneFileBrowser\Plugins\System.Windows.Forms.dll</HintPath>
     </Reference>
     <Reference Include="netstandard">
       <HintPath>V:\Unity\Unity_versions\2020.3.11f1\Editor\Data\NetStandard\ref\2.0.0\netstandard.dll</HintPath>

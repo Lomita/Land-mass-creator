@@ -53,10 +53,10 @@ namespace LandMassCreator
 		[SF] private int m_octaves = 6;
 
 		/// <summary>
-		/// The persistance of equal noise values
+		/// The persistence of equal noise values
 		/// </summary>
-		[DataMember(Name = "Persistance")]
-		[SF] private float m_persistance = 2.0f;
+		[DataMember(Name = "Persistence")]
+		[SF] private float m_persistence = 2.0f;
 
 		/// <summary>
 		/// The density of equal noise values
@@ -124,12 +124,12 @@ namespace LandMassCreator
 		}
 
 		/// <summary>
-		/// Get and set persistance
+		/// Get and set persistence
 		/// </summary>
-		public float Persistance 
+		public float Persistence 
 		{ 
-			get => m_persistance; 
-			set => m_persistance = value.Clamp(0.0f, 5.0f); 
+			get => m_persistence; 
+			set => m_persistence = value.Clamp(0.0f, 5.0f); 
 		}
 
 		/// <summary>
@@ -166,13 +166,13 @@ namespace LandMassCreator
 		/// <param name="scaleOffsetX">Noise offset x axis</param>
 		/// <param name="scaleOffsetY">Noise offset y axis</param>
 		/// <param name="octaves">The amount of noise iterations </param>
-		/// <param name="persistance">The persistance of equal noise values</param>
+		/// <param name="persistence">The persistence of equal noise values</param>
 		/// <param name="density">The density of equal noise values</param>
 		/// <param name="oceanLevel">Cap minimal values</param>
 		/// <param name="capMountainHeight">Cap maximal values</param>
 		public HeightMapSettings(int mapWidth, int mapHeight, int seed, 
 			float scale, float scaleOffsetX, float scaleOffsetY, int octaves, 
-			float persistance, float density, float oceanLevel, float capMountainHeight)
+			float persistence, float density, float oceanLevel, float capMountainHeight)
         {
             MapWidth = mapWidth;
             MapHeight = mapHeight;
@@ -181,7 +181,7 @@ namespace LandMassCreator
             ScaleOffsetX = scaleOffsetX;
             ScaleOffsetY = scaleOffsetY;
             Octaves = octaves;
-            Persistance = persistance;
+            Persistence = persistence;
             Density = density;
             OceanLevel = oceanLevel;
             CapMountainHeight = capMountainHeight;

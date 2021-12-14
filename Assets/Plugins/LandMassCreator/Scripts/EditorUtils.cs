@@ -1,5 +1,4 @@
-﻿using SFB;
-using System;
+﻿using System;
 using System.IO;
 using System.Runtime.Serialization.Json;
 using System.Text;
@@ -13,10 +12,10 @@ namespace LandMassCreator
     /// </summary>
     public enum Status
     {
-        SUCCESS,
-        CANCEL,
-        FAILED,
-        UNKNOWN
+        SUCCESS = 0x1,
+        CANCEL = 0x2,
+        FAILED = 0x4,
+        UNKNOWN = 0x8
     }
 
     /// <summary>
@@ -84,13 +83,18 @@ namespace LandMassCreator
         private static readonly string m_standardPortPath = Application.persistentDataPath;
 
         /// <summary>
+        /// Gets the standard export or import path
+        /// </summary>
+        public static string StandardPortPath => m_standardPortPath;
+
+        /// <summary>
         /// Export terrain settings
         /// </summary>
-        /// <param name="lmg"></param>
-        /// <returns>Return the export state<</returns>
-        public static PortState ExportTerrainSettings(LandmassGenerator lmg)
+        /// <param name="lmg">Landmass generator to export</param>
+        /// <param name="exportFilePath">Export file path</param>
+        /// <returns>Return the export state</returns>
+        public static PortState ExportTerrainSettings(LandmassGenerator lmg, string exportFilePath)
         {
-            string exportFilePath = StandaloneFileBrowser.SaveFilePanel("Select export directory", m_standardPortPath, "terrain", "lmg");
             if (string.IsNullOrEmpty(exportFilePath))
                 return new PortState(Status.CANCEL);
 
@@ -121,21 +125,22 @@ namespace LandMassCreator
         /// <summary>
         /// Import terrain settings
         /// </summary>
+        /// <param name="lmg">Landmass generator to overwrite</param>
+        /// <param name="importPath">Import file path</param>
         /// <returns>Return the import state</returns>
-        public static PortState ImportTerrainSettings(LandmassGenerator lmg)
+        public static PortState ImportTerrainSettings(LandmassGenerator lmg, string importPath)
         {
-            string[] importFile = StandaloneFileBrowser.OpenFilePanel("Select terrain settings for import", m_standardPortPath, "lmg", false);
-            if (importFile.Equals(null) || importFile.Length.Equals(0) || string.IsNullOrEmpty(importFile[0]))
+            if (string.IsNullOrEmpty(importPath))
                 return new PortState(Status.CANCEL);
     
             try
             {
-                if(!File.Exists(importFile[0]))
-                    throw new Exception("File " + importFile[0] + " doesnt exist.");
+                if(!File.Exists(importPath))
+                    throw new Exception("File " + importPath + " doesnt exist.");
 
                 DataLMGSettings serLMG;
                 DataContractJsonSerializer serializer = new DataContractJsonSerializer(typeof(DataLMGSettings));
-                FileStream fileStream = new FileStream(importFile[0], FileMode.Open);
+                FileStream fileStream = new FileStream(importPath, FileMode.Open);
                 serLMG = (DataLMGSettings)serializer.ReadObject(fileStream);
                 if (serLMG == null) 
                     throw new Exception("Failed to deserialize settings!");
@@ -144,17 +149,13 @@ namespace LandMassCreator
                 lmg.AutoUpdate = serLMG.AutoUpdate;
                 lmg.DrawGizmosVertices = serLMG.DrawGizmosVertices;
                 lmg.ColorPalette = serLMG.VertexColors.ConvertToUnityGradient();
-
-                if (!lmg.AutoUpdate)
-                    lmg.GenerateTerrain();
-
             }
             catch (Exception exception)
             {
-                return new PortState(Status.FAILED, exception.ToString(), importFile[0]);
+                return new PortState(Status.FAILED, exception.ToString(), importPath);
             }
 
-            return new PortState(Status.SUCCESS, "", importFile[0]);
+            return new PortState(Status.SUCCESS, "", importPath);
         }
     }
 }

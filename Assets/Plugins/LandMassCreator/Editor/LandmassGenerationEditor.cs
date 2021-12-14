@@ -2,6 +2,8 @@
 using UnityEditor;
 using UnityEditor.SceneManagement;
 using System.Diagnostics;
+using System;
+using SFB;
 
 namespace LandMassCreator
 {
@@ -22,12 +24,25 @@ namespace LandMassCreator
         private GUISkin m_skin = null;
 
         /// <summary>
+        /// Export path selection callback
+        /// </summary>
+        private static Action<string> OnExportPathSelected;
+        
+        /// <summary>
+        /// Import path selection callback
+        /// </summary>
+        private Action<string[]> OnImportFileSelected;
+
+        /// <summary>
         /// This function is called when the object becomes enabled and active
         /// </summary>
         private void OnEnable()
         {
             m_lmg = (LandmassGenerator)target;
             m_skin = (GUISkin)Resources.Load("LMC_GUISkin");
+
+            OnExportPathSelected = Export;
+            OnImportFileSelected = Import;
         }
 
         /// <summary>
@@ -86,7 +101,7 @@ namespace LandMassCreator
             heightMapProperty.FindPropertyRelative("m_scaleOffsetY").floatValue = offset.y;
 
             heightMapProperty.FindPropertyRelative("m_octaves").intValue = EditorGUILayout.IntField("Octaves", m_lmg.Settings.Octaves).Clamp(1, 15); ;
-            heightMapProperty.FindPropertyRelative("m_persistance").floatValue = EditorGUILayout.Slider("Persistance", m_lmg.Settings.Persistance, 0.0f, 5.0f).Clamp(0.0f, 5.0f);
+            heightMapProperty.FindPropertyRelative("m_persistence").floatValue = EditorGUILayout.Slider("Persistence", m_lmg.Settings.Persistence, 0.0f, 5.0f).Clamp(0.0f, 5.0f);
             heightMapProperty.FindPropertyRelative("m_density").floatValue = EditorGUILayout.Slider("Density", m_lmg.Settings.Density, 0.0f, 1.0f).Clamp(0.0f, 1.0f);
             heightMapProperty.FindPropertyRelative("m_oceanLevel").floatValue = EditorGUILayout.FloatField("Ocean Level", m_lmg.Settings.OceanLevel);
             heightMapProperty.FindPropertyRelative("m_CapMountainHeight").floatValue = EditorGUILayout.FloatField("Max Mountain Height", m_lmg.Settings.CapMountainHeight);
@@ -101,7 +116,9 @@ namespace LandMassCreator
         {
             EditorGUILayout.LabelField("Color Settings", m_skin.label);
             EditorGUILayout.BeginVertical("box");
+            
             EditorGUILayout.PropertyField(serializedObject.FindProperty("m_colorPalette"), new GUIContent("Vertex Colors"));
+            
             EditorGUILayout.EndVertical();
         }
 
@@ -132,13 +149,32 @@ namespace LandMassCreator
 
             if (GUILayout.Button("Export"))
             {
-                PortState portState = EditorUtils.ExportTerrainSettings(m_lmg);
+                StandaloneFileBrowser.SaveFilePanelAsync("Select export directory", 
+                    EditorUtils.StandardPortPath, "terrain", "lmg", OnExportPathSelected);
+            }
 
-                switch (portState.Status)
-                {
-                    case Status.SUCCESS:
+            if (GUILayout.Button("Import"))
+            {
+                StandaloneFileBrowser.OpenFilePanelAsync("Select terrain settings for import", 
+                    EditorUtils.StandardPortPath, "lmg", false, OnImportFileSelected);
+            }
+
+            EditorGUILayout.EndHorizontal();
+        }
+
+        /// <summary>
+        /// Called by SaveFilePanelAsync OnExportPathSelected
+        /// Exports the terrain settings and handles errors
+        /// </summary>
+        /// <param name="path">The selected export file path</param>
+        private void Export(string path)
+        {
+            PortState portState = EditorUtils.ExportTerrainSettings(m_lmg, path);
+
+            switch (portState.Status)
+            {
+                case Status.SUCCESS:
                     {
-                        //Debug.Log("Export SUCCESS");
                         if (EditorUtility.DisplayDialog("Export Success",
                             "Would you like to open the export folder?", "Yes", "No"))
                         {
@@ -150,48 +186,58 @@ namespace LandMassCreator
                             Process.Start("xdg-open", portState.Path);
 #endif
                         }
-                            break;
-                    }                 
-
-                    case Status.CANCEL:
                         break;
+                    }
 
-                    case Status.FAILED:
-                    case Status.UNKNOWN:
+                case Status.CANCEL:
+                    break;
+
+                case Status.FAILED:
+                case Status.UNKNOWN:
                     {
                         EditorUtility.DisplayDialog("Export Failed",
                             "Error: " + portState.Msg, "Ok");
                         break;
                     }
-                }
             }
+        }
 
-            if (GUILayout.Button("Import"))
+        /// <summary>
+        /// Called by OpenFilePanelAsync OnImportFileSelected
+        /// Imports the terrain settings and handles errors
+        /// </summary>
+        /// <param name="path">The selected import file path</param>
+        private void Import(string[] path)
+        {
+            PortState portState = new PortState(Status.CANCEL);
+
+            if (!path.Equals(null) && !path.Length.Equals(0))
+                portState = EditorUtils.ImportTerrainSettings(m_lmg, path[0]);
+
+            switch (portState.Status)
             {
-                PortState portState = EditorUtils.ImportTerrainSettings(m_lmg);
-
-                switch (portState.Status)
-                {
-                    case Status.SUCCESS:
+                case Status.SUCCESS:
                     {
+                        //repaint not working for gradient fields =C
                         Repaint();
-                        break;
-                    }                  
-                
-                    case Status.CANCEL:
-                        break;
 
-                    case Status.FAILED:
-                    case Status.UNKNOWN:
+                        if (!m_lmg.AutoUpdate)
+                            m_lmg.GenerateTerrain();
+
+                        break;
+                    }
+
+                case Status.CANCEL:
+                    break;
+
+                case Status.FAILED:
+                case Status.UNKNOWN:
                     {
                         EditorUtility.DisplayDialog("Import Failed",
                             "Error: " + portState.Msg, "Ok");
                         break;
-                    }                
-                }
+                    }
             }
-
-            EditorGUILayout.EndHorizontal();
         }
     }
 }

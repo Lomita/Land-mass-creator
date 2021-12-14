@@ -3,6 +3,9 @@ using SF = UnityEngine.SerializeField;
 
 namespace LandMassCreator
 {
+    /// <summary>
+    /// Landmass generator creates a terrain based on a height map
+    /// </summary>
     public class LandmassGenerator : MonoBehaviour
     {
         /// <summary>
@@ -30,10 +33,25 @@ namespace LandMassCreator
         /// </summary>
         [SF] private bool m_drawGizmosVertices = false;
 
-        private Mesh World;                                                 //World mesh
-        private Vector3[] Vertices;                                         //mesh vertices
-        private Color[] Colors;                                             //world colors
-        private int[] Triangles;                                            //mesh triangles
+        /// <summary>
+        /// Terrain mesh
+        /// </summary>
+        private Mesh m_terrainMesh = null;
+        
+        /// <summary>
+        /// Mesh vertices
+        /// </summary>
+        private Vector3[] m_vertices = null;                                         
+        
+        /// <summary>
+        /// Mesh vertex colors
+        /// </summary>
+        private Color[] m_colors = null;
+        
+        /// <summary>
+        /// Mesh triangles
+        /// </summary>
+        private int[] m_triangles = null;
 
         /// <summary>
         /// Gets and sets height map settings
@@ -56,6 +74,11 @@ namespace LandMassCreator
         public bool AutoUpdate { get => m_autoUpdate; set => m_autoUpdate = value; }
         
         /// <summary>
+        /// Gets the terrain Mesh
+        /// </summary>
+        public Mesh TerrainMesh { get => m_terrainMesh; }
+
+        /// <summary>
         /// Generates the terrain
         /// </summary>
         public void GenerateTerrain()
@@ -69,40 +92,40 @@ namespace LandMassCreator
         /// </summary>
         private void DrawTriangles()
         {
-            World = new Mesh();
+            m_terrainMesh = new Mesh();
             MeshFilter m = GetComponent<MeshFilter>();
-            m.mesh = World;
+            m.mesh = m_terrainMesh;
 
             int worldLength = Settings.MapHeight;
             int worldWidth = Settings.MapWidth;
 
-            Vertices = new Vector3[(worldLength + 1) * (worldWidth + 1)];
-            Colors = new Color[(worldLength + 1) * (worldWidth + 1)];
+            m_vertices = new Vector3[(worldLength + 1) * (worldWidth + 1)];
+            m_colors = new Color[(worldLength + 1) * (worldWidth + 1)];
 
             for (int idx = 0, x = 0; x < worldWidth; x++)
             {
                 for (int y = 0; y < worldLength; y++)
                 {
-                    Vertices[idx] = new Vector3(x, m_map.HeightMapReal[x, y], y);
-                    Colors[idx] = ColorPalette.Evaluate(m_map.HeightMapNormalized[x, y]);
+                    m_vertices[idx] = new Vector3(x, m_map.HeightMapReal[x, y], y);
+                    m_colors[idx] = ColorPalette.Evaluate(m_map.HeightMapNormalized[x, y]);
                     idx++;
                 }
             }
 
             int Size = worldWidth * worldLength * 6;
-            Triangles = new int[Size];
+            m_triangles = new int[Size];
 
             int t = 0, v = 0;
             for (int x = 0; x < worldWidth - 1; x++)
             {
                 for (int y = 0; y < worldLength - 1; y++)
                 {
-                    Triangles[t + 0] = v + 0;
-                    Triangles[t + 1] = v + 1;
-                    Triangles[t + 2] = v + worldLength + 1;
-                    Triangles[t + 3] = v + 0;
-                    Triangles[t + 4] = v + worldLength + 1;
-                    Triangles[t + 5] = v + worldLength;
+                    m_triangles[t + 0] = v + 0;
+                    m_triangles[t + 1] = v + 1;
+                    m_triangles[t + 2] = v + worldLength + 1;
+                    m_triangles[t + 3] = v + 0;
+                    m_triangles[t + 4] = v + worldLength + 1;
+                    m_triangles[t + 5] = v + worldLength;
 
                     v++;
                     t += 6;
@@ -119,15 +142,15 @@ namespace LandMassCreator
         /// </summary>
         private void UpdateMesh()
         {
-            if (!World) return;
+            if (!m_terrainMesh) return;
 
-            World.Clear();
+            m_terrainMesh.Clear();
 
-            World.vertices = Vertices;
-            World.triangles = Triangles;
-            World.colors = Colors;
+            m_terrainMesh.vertices = m_vertices;
+            m_terrainMesh.triangles = m_triangles;
+            m_terrainMesh.colors = m_colors;
 
-            World.RecalculateNormals();
+            m_terrainMesh.RecalculateNormals();
         }
 
         /// <summary>
@@ -135,12 +158,13 @@ namespace LandMassCreator
         /// </summary>
         private void OnDrawGizmos()
         {
-            if (!m_drawGizmosVertices || Vertices == null) return;
+            if (!m_drawGizmosVertices || m_vertices == null) 
+                return;
 
             Color oldCol = Gizmos.color;
             Gizmos.color = Color.magenta;
-            for (int idx = 0; idx < Vertices.Length; idx++)
-                Gizmos.DrawCube(Vertices[idx] + transform.position, new Vector3(0.1f, 0.1f, 0.1f));
+            for (int idx = 0; idx < m_vertices.Length; idx++)
+                Gizmos.DrawCube(m_vertices[idx] + transform.position, new Vector3(0.1f, 0.1f, 0.1f));
 
             Gizmos.color = oldCol;
         }

@@ -49,7 +49,7 @@ namespace LandMassCreator
 						float perlinValue = Mathf.PerlinNoise(xCoord, yCoord) * 2.0f - 1.0f;
 						noiseHeight += perlinValue * amplitude;
 
-						amplitude *= hms.Persistance;
+						amplitude *= hms.Persistence;
 						frequency *= hms.Density;
 					}
 
