@@ -79,6 +79,11 @@ namespace LandMassCreator
         public Mesh TerrainMesh { get => m_terrainMesh; }
 
         /// <summary>
+        /// Gets the height map output
+        /// </summary>
+        public HeightMap Map { get => m_map;}
+
+        /// <summary>
         /// Generates the terrain
         /// </summary>
         public void GenerateTerrain()
@@ -93,8 +98,16 @@ namespace LandMassCreator
         private void DrawTriangles()
         {
             m_terrainMesh = new Mesh();
-            MeshFilter m = GetComponent<MeshFilter>();
-            m.mesh = m_terrainMesh;
+
+            try
+            {
+                MeshFilter m = gameObject.GetComponent<MeshFilter>();
+                m.mesh = m_terrainMesh;
+            }
+            catch
+            { 
+            
+            }
 
             int worldLength = Settings.MapHeight;
             int worldWidth = Settings.MapWidth;

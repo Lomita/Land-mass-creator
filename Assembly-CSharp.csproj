@@ -1,7 +1,7 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <PropertyGroup>
-    <LangVersion>8.0</LangVersion>
+    <LangVersion>latest</LangVersion>
   </PropertyGroup>
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
@@ -53,28 +53,7 @@
     <UnityVersion>2020.3.11f1</UnityVersion>
   </PropertyGroup>
   <ItemGroup>
-    <Analyzer Include="V:\Microsoft Visual Studio\2019\Community\Common7\IDE\Extensions\Microsoft\Visual Studio Tools for Unity\Analyzers\Microsoft.Unity.Analyzers.dll" />
-  </ItemGroup>
-  <ItemGroup>
-    <Compile Include="Assets\Tools\LandMassCreator\StandaloneFileBrowser\StandaloneFileBrowserEditor.cs" />
-    <Compile Include="Assets\Tools\LandMassCreator\StandaloneFileBrowser\StandaloneFileBrowserWindows.cs" />
-    <Compile Include="Assets\Tools\LandMassCreator\Scripts\ExtensionMethods.cs" />
-    <Compile Include="Assets\Tools\LandMassCreator\StandaloneFileBrowser\IStandaloneFileBrowser.cs" />
-    <Compile Include="Assets\Tools\LandMassCreator\Scripts\DataLMGContract.cs" />
-    <Compile Include="Assets\Tools\LandMassCreator\Scripts\HeightMap.cs" />
-    <Compile Include="Assets\Tools\LandMassCreator\StandaloneFileBrowser\StandaloneFileBrowser.cs" />
-    <Compile Include="Assets\Tools\LandMassCreator\StandaloneFileBrowser\StandaloneFileBrowserLinux.cs" />
-    <Compile Include="Assets\Tools\LandMassCreator\StandaloneFileBrowser\StandaloneFileBrowserMac.cs" />
-    <Compile Include="Assets\Tools\LandMassCreator\Scripts\Noise.cs" />
-    <Compile Include="Assets\Tools\LandMassCreator\Scripts\HeightMapSettings.cs" />
-    <Compile Include="Assets\Tools\LandMassCreator\Scripts\EditorUtils.cs" />
-    <Compile Include="Assets\Tools\LandMassCreator\Scripts\WorldGenerator.cs" />
-    <Compile Include="Assets\Tools\LandMassCreator\Scripts\LandmassGenerator.cs" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="Assets\Tools\LandMassCreator\Shader\VertexColor.shader" />
-    <None Include="Assets\Tools\LandMassCreator\StandaloneFileBrowser\Plugins\Ookii.Dialogs.dll" />
-    <None Include="Assets\Tools\LandMassCreator\StandaloneFileBrowser\Plugins\System.Windows.Forms.dll" />
+    <Compile Include="Assets\Scenes\API.cs" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="UnityEngine">
@@ -300,13 +279,13 @@
       <HintPath>V:\Unity\Unity_versions\2020.3.11f1\Editor\Data\Managed\UnityEngine\UnityEditor.UnityConnectModule.dll</HintPath>
     </Reference>
     <Reference Include="Ookii.Dialogs">
-      <HintPath>Assets\Tools\LandMassCreator\StandaloneFileBrowser\Plugins\Ookii.Dialogs.dll</HintPath>
+      <HintPath>Assets\Plugins\StandaloneFileBrowser\Plugins\Ookii.Dialogs.dll</HintPath>
     </Reference>
     <Reference Include="Newtonsoft.Json">
       <HintPath>Library\PackageCache\com.unity.nuget.newtonsoft-json@2.0.0\Runtime\Newtonsoft.Json.dll</HintPath>
     </Reference>
     <Reference Include="System.Windows.Forms">
-      <HintPath>Assets\Tools\LandMassCreator\StandaloneFileBrowser\Plugins\System.Windows.Forms.dll</HintPath>
+      <HintPath>Assets\Plugins\StandaloneFileBrowser\Plugins\System.Windows.Forms.dll</HintPath>
     </Reference>
     <Reference Include="netstandard">
       <HintPath>V:\Unity\Unity_versions\2020.3.11f1\Editor\Data\NetStandard\ref\2.0.0\netstandard.dll</HintPath>
@@ -685,6 +664,10 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="Assembly-CSharp-firstpass.csproj">
+      <Project>{A1584F57-62CF-9550-51BB-08C7D438A98D}</Project>
+      <Name>Assembly-CSharp-firstpass</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Target Name="GenerateTargetFrameworkMonikerAttribute" />
