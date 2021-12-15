@@ -53,7 +53,7 @@
     <UnityVersion>2020.3.11f1</UnityVersion>
   </PropertyGroup>
   <ItemGroup>
-    <Compile Include="Assets\Scenes\API.cs" />
+    <Compile Include="Assets\API.cs" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="UnityEngine">
