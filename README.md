@@ -5,12 +5,8 @@ user input or directly integrated into your own code.
 
 Unity Version: 2020.3.11.f1
 
-# Download
-You can download the project on github directly or get the unitypackage here: https://drive.google.com/file/d/13YPqrZJxHeECgMkS8l60YHwDWZIMYFjY/view
-
-# Manuel
-EN Manuel
-[en-land-mass-creator-manuel.pdf](https://github.com/miru-dot/land-mass-creator/files/8502507/en-land-mass-creator-manuel.pdf)
-
-DE Manuel
-[de-land-mass-creator-manuel.pdf](https://github.com/miru-dot/land-mass-creator/files/8502508/de-land-mass-creator-manuel.pdf)
+# Getting started
+1. Download the [Unitypackage](https://drive.google.com/file/d/13YPqrZJxHeECgMkS8l60YHwDWZIMYFjY/view).
+2. Get the manual in [english](https://github.com/miru-dot/land-mass-creator/files/8502643/en-land-mass-creator-manual.pdf) or [german](https://github.com/miru-dot/land-mass-creator/files/8502642/de-land-mass-creator-manual.pdf).
+3. Go to the section "How to Start".
+4. Read it. 📖
